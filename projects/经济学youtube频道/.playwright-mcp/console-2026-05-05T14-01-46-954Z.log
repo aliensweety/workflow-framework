@@ -1,0 +1,2 @@
+[    1010ms] [LOG] {event: CustomEvent, detail: Object} @ https://labs.google/fx/zh/tools/flow/project/3215655c-4d04-443e-9097-9b02a20085e8:23
+[   10327ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://aisandbox-pa.googleapis.com/v1/projects/3215655c-4d04-443e-9097-9b02a20085e8/flowMedia:batchGenerateImages:0

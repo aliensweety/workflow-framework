@@ -1,0 +1,187 @@
+name: economics-video
+intent: |
+  经济学YouTube频道长视频全自动生产流程。
+  流程：选题探讨 → Deep Research → 口播文案 → 配音 → 字幕 → 配图规划（SRT切段+Grok写prompt） → 出图 → 剪辑合成。
+  核心价值：深度研究（系统级洞察）、口播文案（优雅叙事）、视觉叙事（配图+剪辑）。
+  风格约束：深度叙事+系统思维+高阶美学，非工具化生存指南，18-22分钟英文口播。
+  自动化：Grok 通过 skill 调用，TTS/Whisper/剪映本地执行。
+
+  fan-out 结构：字幕校对后，Grok 读取 SRT 时间戳，自主选择叙事完整的段落，
+  决定每张图配 5s/10s/20s，写入 manifest.units（含 time_range 和 image_prompt），
+  之后的"出图"步骤按 unit 逐个跑，支持"第 N 段配图改一下"的局部重跑。
+
+manifest:
+  unit_type: segment
+  unit_fields: [time_range, image_prompt, image_path]
+
+steps:
+  - id: topic_discuss
+    intent: 和用户讨论确定视频主题、切入角度和目标受众
+    method: claude-code
+    autonomy: ask
+    produces: "{run.dir}/topic.md"
+
+  - id: deep_research
+    intent: |
+      发起 Grok Expert Deep Research 任务，原地轮询直到完成，结果写入 research.md。
+      原文 5 轮 × 60s 轮询，长任务且重 token，适合 sub-agent 派发避免污染主会话。
+    method: script
+    dispatch: subagent
+    autonomy: report
+    consumes: "{run.dir}/topic.md"
+    produces: "{run.dir}/research.md"
+    command: |
+      node .claude/skills/grok/scripts/run.js \
+        --action start_chat \
+        --prompt "You are a deep research expert. Conduct comprehensive research on the following topic from a rigorous economic perspective. Cover: 1) Core theoretical foundations, 2) Key debates and competing views, 3) Empirical evidence and real-world cases, 4) Implications and future outlook. Provide a structured, in-depth analysis suitable for a sophisticated audience.
+
+Topic: $(cat {run.dir}/topic.md)" \
+        --model expert \
+        --output {run.dir}/research_grok.json
+
+      node -e "
+        const fs = require('fs');
+        const { execSync } = require('child_process');
+        const sleep = s => { const e = Date.now() + s*1000; while(Date.now()<e){} };
+
+        const start = JSON.parse(fs.readFileSync('{run.dir}/research_grok.json', 'utf8'));
+        const cid = start.conversation_id;
+        console.log('conversation_id:', cid);
+
+        const maxRetries = 5;
+        for (let i = 0; i < maxRetries; i++) {
+          console.log('Waiting 60s (' + (i+1) + '/' + maxRetries + ')');
+          sleep(60);
+          const res = JSON.parse(execSync(
+            'node .claude/skills/grok/scripts/run.js --action get_chat --conversation_id ' + cid,
+            { encoding: 'utf8' }
+          ));
+          if (res.status === 'completed') {
+            fs.writeFileSync('{run.dir}/research.md', res.reply);
+            console.log('Done! Wrote', res.reply.length, 'chars');
+            process.exit(0);
+          }
+          if (res.status === 'not_found') { console.error('not_found'); process.exit(1); }
+          console.log('Still running...');
+        }
+        console.error('Max retries');
+        process.exit(1);
+      "
+
+  - id: write_script
+    intent: |
+      用 Grok Expert + Prompt 2 写 18-22 分钟英文口播文案。
+      Claude Code 读取 research.md 和 script-prompt.md，通过 grok --file 上传。
+    method: claude-code
+    autonomy: ask
+    consumes: ["{run.dir}/research.md", "prompts/script-prompt.md"]
+    produces: "{run.dir}/script.md"
+
+  - id: voiceover
+    intent: |
+      用 RunningHub IndexTTS2 + 参考音频克隆生成整段配音。
+      注意：RunningHub textarea 上限 5000 字，文案超出时需分两段分别调用 start_tts，
+      等两段都生成完毕后再用 node 合并为 voiceover.mp3。
+    method: script
+    autonomy: auto
+    consumes: ["{run.dir}/script.md", "{run.dir}/../ref-audio.mp3"]
+    produces: "{run.dir}/voiceover.mp3"
+    command: |
+      node -e "
+        const fs = require('fs');
+        const text = fs.readFileSync('{run.dir}/script.md', 'utf8');
+        const MAX = 4900;
+        if (text.length <= MAX) {
+          // 单段
+          const r = require('child_process');
+          r.execSync('node .claude/skills/runninghub-tts/scripts/run.js --action start_tts --audio {run.dir}/../ref-audio.mp3 --text-file {run.dir}/script.md --output {run.dir}/tts_start.json', {stdio: 'inherit'});
+        } else {
+          // 双段
+          const mid = Math.floor(text.length / 2);
+          let split = mid;
+          while (split < text.length && text[split] !== '\n') split++;
+          fs.writeFileSync('{run.dir}/script_p1.md', text.slice(0, split));
+          fs.writeFileSync('{run.dir}/script_p2.md', text.slice(split));
+          const r = require('child_process');
+          r.execSync('node .claude/skills/runninghub-tts/scripts/run.js --action start_tts --audio {run.dir}/../ref-audio.mp3 --text-file {run.dir}/script_p1.md --output {run.dir}/tts_p1.json', {stdio: 'inherit'});
+          r.execSync('node .claude/skills/runninghub-tts/scripts/run.js --action start_tts --audio {run.dir}/../ref-audio.mp3 --text-file {run.dir}/script_p2.md --output {run.dir}/tts_p2.json', {stdio: 'inherit'});
+        }
+      "
+
+      node -e "
+        const fs = require('fs');
+        const p1 = JSON.parse(fs.readFileSync('{run.dir}/tts_p1.json', 'utf8').replace('\n',''));
+        if (p1.task_id) {
+          require('child_process').execSync('node .claude/skills/runninghub-tts/scripts/run.js --action get_tts --task-id ' + p1.task_id + ' --output {run.dir}/voiceover_p1.mp3 --wait 300', {stdio: 'inherit'});
+          require('child_process').execSync('node .claude/skills/runninghub-tts/scripts/run.js --action get_tts --task-id ' + JSON.parse(fs.readFileSync('{run.dir}/tts_p2.json', 'utf8').replace('\n','')).task_id + ' --output {run.dir}/voiceover_p2.mp3 --wait 300', {stdio: 'inherit'});
+          const buf1 = fs.readFileSync('{run.dir}/voiceover_p1.mp3');
+          const buf2 = fs.readFileSync('{run.dir}/voiceover_p2.mp3');
+          fs.writeFileSync('{run.dir}/voiceover.mp3', Buffer.concat([buf1, buf2]));
+        } else {
+          require('child_process').execSync('node .claude/skills/runninghub-tts/scripts/run.js --action get_tts --task-id ' + JSON.parse(fs.readFileSync('{run.dir}/tts_start.json', 'utf8').replace('\n','')).task_id + ' --output {run.dir}/voiceover.mp3 --wait 300', {stdio: 'inherit'});
+        }
+      " 2>&1
+
+  - id: transcribe
+    intent: 用 faster-whisper 将语音转为带时间戳的 SRT 粗字幕
+    method: script
+    autonomy: auto
+    consumes: "{run.dir}/voiceover.mp3"
+    produces: "{run.dir}/raw_subtitles.srt"
+    command: "python scripts/transcribe.py --input {run.dir}/voiceover.mp3 --output {run.dir}/raw_subtitles.srt"
+
+  - id: correct_subtitles
+    intent: |
+      用 Grok 根据原文校对粗字幕中的识别错误，保持时间戳不变，生成干净的 SRT。
+      Claude Code 读取 raw_subtitles.srt 和 script.md，通过 grok --file 上传。
+    method: claude-code
+    autonomy: report
+    consumes: ["{run.dir}/raw_subtitles.srt", "{run.dir}/script.md"]
+    produces: "{run.dir}/subtitles.srt"
+
+  - id: plan_segments
+    intent: |
+      Grok 读取带时间戳的 subtitles.srt，自主选择叙事完整的段落写配图 prompt，
+      写入 manifest.units（含 time_range 和 image_prompt），之后的"出图"按 unit 逐个跑。
+      Grok 按 subtitles.srt 的时间戳**每 5 秒均匀切一段**，读出文字内容，写 image_prompt。
+      不是"选叙事关键帧"，而是固定间隔切段覆盖全片。
+      time_range 格式 "HH:MM:SS,mmm --> HH:MM:SS,mmm"（SRT 原格式），
+      最终转换为 "HH:MM:SS-HH:MM:SS" 格式写入 manifest.units。
+      Grok 输出 JSON 数组 [{time_range, image_prompt}]，
+      Claude Code 拿到后写入 manifest.yaml 的 units 数组
+      （id 用 seg_000 / seg_001 零填充，status 初始 pending）。
+    method: skill:grok
+    autonomy: ask
+    consumes: "{run.dir}/subtitles.srt"
+    produces: "{run.dir}/manifest.yaml"
+
+  - id: generate_images
+    intent: |
+      对每个 unit 调 Google Flow 生成一张配图，写回 unit.image_path。
+      这一步对每个 unit 独立跑——单张图坏了/想换风格，可以只重跑那一个 unit。
+    method: script
+    iterates_over: units
+    autonomy: report
+    command: |
+      node .claude/skills/google-flow/scripts/run.js \
+        --action generate \
+        --prompt "{unit.image_prompt}" \
+        --project-id 4cfa18e8-202b-4ea0-9326-557b39f3fb70 \
+        --output {run.dir}/images/{unit.id}.jpg
+
+  - id: assemble_video
+    intent: |
+      用剪映将配音、字幕、配图合成最终视频。
+      导入 voiceover.mp3 为主音轨，按 manifest.units 的顺序排列图片做 B-roll，
+      subtitles.srt 为字幕轨道，输出最终 MP4。
+    method: script
+    autonomy: report
+    consumes: ["{run.dir}/voiceover.mp3", "{run.dir}/manifest.yaml", "{run.dir}/images/", "{run.dir}/subtitles.srt"]
+    produces: "{run.dir}/final.mp4"
+    command: |
+      python scripts/assemble_video.py \
+        --voiceover {run.dir}/voiceover.mp3 \
+        --manifest {run.dir}/manifest.yaml \
+        --images {run.dir}/images/ \
+        --subtitles {run.dir}/subtitles.srt \
+        --output {run.dir}/final.mp4

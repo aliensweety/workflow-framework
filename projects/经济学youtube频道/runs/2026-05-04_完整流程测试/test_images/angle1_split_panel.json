@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "218e626f-2e4c-452e-b87e-143e882c13f1",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\masterpiece_classical_oil_painting_on_202605052215.jpeg",
+      "resolution": "2K",
+      "filename": "masterpiece_classical_oil_painting_on_202605052215.jpeg",
+      "sizeBytes": 3514905
+    }
+  ],
+  "prompt": "masterpiece classical oil painting on canvas, thick visible brushstrokes with rich impasto texture and layered glazing, dramatic chiaroscuro lighting with warm golden highlights and deep shadows, in the style of Rembrandt and John Singer Sargent, warm rich earthy color palette with vibrant gold accents, visible canvas weave and textured paint layers, professional balanced composition, museum quality, highly textured surface, insightful and timeless atmosphere, no frame, 8k resolution, professional oil painting, 16:9 horizontal composition, cinematic storyboard feel, narrative tension. Split composition creates powerful tension: left side dramatic low-angle shot of a figure at the White House podium, face half in shadow, hand raised announcing the decision, scattered newspapers flying in the air with bold headlines; right side massive gold vault doors slowly slamming shut, golden light leaking out and fading into darkness, empty shelves visible inside, foreground broken gold chains and falling coins creating leading lines toward the closing door, emotional contrast between presidential power and the irreversible loss of the gold anchor, subtle metaphor of broken promise in the heavy shadows, high drama and historical gravity.",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 59797
+}

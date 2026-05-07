@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "5c0a66dc-0eb6-4c5f-adfb-3796aa6d9a13",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\masterpiece_oil_painting_on_canvas,_202605052216.jpeg",
+      "resolution": "2K",
+      "filename": "masterpiece_oil_painting_on_canvas,_202605052216.jpeg",
+      "sizeBytes": 4332623
+    }
+  ],
+  "prompt": "masterpiece oil painting on canvas, extremely thick and rough impasto brushstrokes with heavy textured paint layers and visible palette knife smears, bold expressive loose brushwork full of energetic smears and swirling strokes, in the style of Vincent van Gogh and Claude Monet, vibrant dynamic color palette with bold color contrasts and rich impasto texture, visible canvas weave and thickly applied oil paint, atmospheric painterly mood, museum quality, highly textured surface, insightful and timeless atmosphere, no frame, 8k resolution, professional oil painting, 16:9 horizontal composition, cinematic storyboard feel, narrative tension. Emotional contrast fills the entire canvas: foreground of a solitary figure standing before a massive bank vault door, face illuminated by warm orange torchlight from behind, casting a long dark shadow stretching across cold marble floor toward the camera, the door itself glowing faintly with residual golden light from inside; background blurs into swirling chaotic impasto sky of deep indigo and burning crimson, symbolizing the turbulence of the global monetary system; fallen gold coins scattered in the foreground torch's light creating a diagonal leading line, the figure's silhouette perfectly centered between the dying warmth of the gold behind and the cold darkness ahead, emotional weight of irreversible decision captured in a single frozen moment of dawn breaking over the old monetary order, painterly drama and existential gravity.",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 70890
+}

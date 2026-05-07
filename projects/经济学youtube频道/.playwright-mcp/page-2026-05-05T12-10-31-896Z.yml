@@ -1,0 +1,59 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - progressbar [ref=e6]
+      - main [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - img [ref=e20]
+              - generic [ref=e25]: 使用 Google 账号登录
+            - img "AI Test Kitchen" [ref=e26]
+          - generic [ref=e27]:
+            - heading "请选择账号" [level=1] [ref=e28]
+            - generic [ref=e30]:
+              - text: 继续前往
+              - button "AI Test Kitchen" [ref=e31] [cursor=pointer]
+        - generic [ref=e34]:
+          - list [ref=e42]:
+            - listitem [ref=e43]:
+              - link "gle goo 3w2com@gmail.com" [ref=e44] [cursor=pointer]:
+                - generic [ref=e48]:
+                  - generic [ref=e49]: gle goo
+                  - generic [ref=e50]: 3w2com@gmail.com
+            - listitem [ref=e51]:
+              - link "com 3w3 wcom6859@gmail.com" [ref=e52] [cursor=pointer]:
+                - generic [ref=e56]:
+                  - generic [ref=e57]: com 3w3
+                  - generic [ref=e58]: wcom6859@gmail.com
+            - listitem [ref=e59]:
+              - link "使用其他账号" [ref=e60] [cursor=pointer]:
+                - generic [ref=e61]:
+                  - img [ref=e63]
+                  - generic [ref=e66]: 使用其他账号
+          - generic [ref=e69]:
+            - text: 建议您在使用“AI Test Kitchen”之前，先阅读此应用的
+            - link "《隐私权政策》" [ref=e70] [cursor=pointer]:
+              - /url: https://policies.google.com/privacy
+            - text: 和
+            - link "《服务条款》" [ref=e71] [cursor=pointer]:
+              - /url: https://policies.google.com/terms
+            - text: 。
+    - contentinfo [ref=e75]:
+      - combobox "更改语言 简体中文" [ref=e79] [cursor=pointer]:
+        - generic:
+          - generic: 简体中文
+        - generic:
+          - img
+      - list [ref=e81]:
+        - listitem [ref=e82]:
+          - link "帮助" [ref=e83] [cursor=pointer]:
+            - /url: https://support.google.com/accounts?hl=zh-CN&p=account_iph
+        - listitem [ref=e84]:
+          - link "隐私权" [ref=e85] [cursor=pointer]:
+            - /url: https://accounts.google.com/TOS?loc=US&hl=zh-CN&privacy=true
+        - listitem [ref=e86]:
+          - link "条款" [ref=e87] [cursor=pointer]:
+            - /url: https://accounts.google.com/TOS?loc=US&hl=zh-CN
+  - iframe [ref=e88]:
+    

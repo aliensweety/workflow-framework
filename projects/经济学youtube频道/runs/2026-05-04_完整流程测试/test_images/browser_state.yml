@@ -1,0 +1,184 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T"
+    - generic [ref=e3]:
+      - list [ref=e4]:
+        - listitem [ref=e5]:
+          - link "Flow" [ref=e6] [cursor=pointer]:
+            - /url: /fx/zh/tools/flow
+      - generic [ref=e7]:
+        - link "tv Flow TV" [ref=e8] [cursor=pointer]:
+          - /url: https://labs.google/flow/tv
+          - generic [ref=e9]: tv
+          - text: Flow TV
+        - link [ref=e10] [cursor=pointer]:
+          - /url: https://discord.com/invite/googlelabs
+          - img [ref=e12]
+        - link "Instagram Logo" [ref=e14] [cursor=pointer]:
+          - /url: https://www.instagram.com/flowbygoogle
+          - img "Instagram Logo" [ref=e15]
+        - link "X (Twitter) Logo" [ref=e16] [cursor=pointer]:
+          - /url: https://x.com/FlowbyGoogle
+          - img "X (Twitter) Logo" [ref=e17]
+        - button "help_outlined Flow 帮助中心 Flow 帮助中心" [ref=e36]:
+          - generic: help_outlined
+          - generic [ref=e19]: Flow 帮助中心
+          - generic [ref=e20]: Flow 帮助中心
+        - generic [ref=e21] [cursor=pointer]: more_vert
+        - button "PRO 用户头像" [ref=e37]:
+          - generic [ref=e38]: PRO
+          - img "用户头像" [ref=e39]
+    - generic [ref=e41]:
+      - generic [ref=e48]:
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - link [ref=e52] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - text: economics-video
+                - button "edit 修改项目" [ref=e55]:
+                  - generic: edit
+                  - generic [ref=e56]: 修改项目
+              - button "delete 删除项目" [ref=e57]:
+                - generic: delete
+                - generic [ref=e58]: 删除项目
+          - generic [ref=e59]:
+            - link [ref=e60] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/3215655c-4d04-443e-9097-9b02a20085e8
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - text: 测试项目ABC
+                - button "edit 修改项目" [ref=e64]:
+                  - generic: edit
+                  - generic [ref=e65]: 修改项目
+              - button "delete 删除项目" [ref=e66]:
+                - generic: delete
+                - generic [ref=e67]: 删除项目
+          - generic [ref=e68]:
+            - link [ref=e69] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/11e565d3-8a59-4691-9f54-ad6308cefbf4
+            - generic [ref=e70]:
+              - generic [ref=e71]:
+                - text: 测试水彩
+                - button "edit 修改项目" [ref=e72]:
+                  - generic: edit
+                  - generic [ref=e73]: 修改项目
+              - button "delete 删除项目" [ref=e74]:
+                - generic: delete
+                - generic [ref=e75]: 删除项目
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - link [ref=e79] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/d532b8b9-568e-4fd0-8475-ed04130c186f
+            - generic [ref=e80]:
+              - generic [ref=e81]:
+                - text: 5月04日 17:32
+                - button "edit 修改项目" [ref=e82]:
+                  - generic: edit
+                  - generic [ref=e83]: 修改项目
+              - button "delete 删除项目" [ref=e84]:
+                - generic: delete
+                - generic [ref=e85]: 删除项目
+          - generic [ref=e86]:
+            - link [ref=e87] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/a9370f7e-3814-467a-b61d-b25e2cc00190
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - text: 5月04日 14:28
+                - button "edit 修改项目" [ref=e90]:
+                  - generic: edit
+                  - generic [ref=e91]: 修改项目
+              - button "delete 删除项目" [ref=e92]:
+                - generic: delete
+                - generic [ref=e93]: 删除项目
+          - generic [ref=e94]:
+            - link [ref=e95] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/68d9086c-9ea4-4024-be90-40e840a27931
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - text: 5月04日 14:22
+                - button "edit 修改项目" [ref=e98]:
+                  - generic: edit
+                  - generic [ref=e99]: 修改项目
+              - button "delete 删除项目" [ref=e100]:
+                - generic: delete
+                - generic [ref=e101]: 删除项目
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - link [ref=e105] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/9362fbcc-87fc-47ca-9a45-02e3c7f3d8f0
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - text: 5月04日 14:14
+                - button "edit 修改项目" [ref=e108]:
+                  - generic: edit
+                  - generic [ref=e109]: 修改项目
+              - button "delete 删除项目" [ref=e110]:
+                - generic: delete
+                - generic [ref=e111]: 删除项目
+          - generic [ref=e112]:
+            - link [ref=e113] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/ae5566bb-4de7-4f40-aee8-6aac41e97081
+            - generic [ref=e114]:
+              - generic [ref=e115]:
+                - text: 5月04日 13:37
+                - button "edit 修改项目" [ref=e116]:
+                  - generic: edit
+                  - generic [ref=e117]: 修改项目
+              - button "delete 删除项目" [ref=e118]:
+                - generic: delete
+                - generic [ref=e119]: 删除项目
+          - generic [ref=e120]:
+            - link [ref=e121] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/6c8cc26a-d66c-49d3-87b4-e65b84bb0486
+            - generic [ref=e122]:
+              - generic [ref=e123]:
+                - text: 经济学
+                - button "edit 修改项目" [ref=e124]:
+                  - generic: edit
+                  - generic [ref=e125]: 修改项目
+              - button "delete 删除项目" [ref=e126]:
+                - generic: delete
+                - generic [ref=e127]: 删除项目
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - link [ref=e131] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/fdcb30f4-431e-4790-abb7-b9f649e3e707
+            - generic [ref=e132]:
+              - generic [ref=e133]:
+                - text: 读书频道二
+                - button "edit 修改项目" [ref=e134]:
+                  - generic: edit
+                  - generic [ref=e135]: 修改项目
+              - button "delete 删除项目" [ref=e136]:
+                - generic: delete
+                - generic [ref=e137]: 删除项目
+          - generic [ref=e138]:
+            - link [ref=e139] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/1bd5b55e-671a-47db-8b55-17ae6f693732
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - text: 4月28日 19:09
+                - button "edit 修改项目" [ref=e142]:
+                  - generic: edit
+                  - generic [ref=e143]: 修改项目
+              - button "delete 删除项目" [ref=e144]:
+                - generic: delete
+                - generic [ref=e145]: 删除项目
+          - generic [ref=e146]:
+            - link [ref=e147] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/9f746efd-d8d0-4e7c-9f61-b8acc9e8cc2f
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - text: 4月28日 18:52
+                - button "edit 修改项目" [ref=e150]:
+                  - generic: edit
+                  - generic [ref=e151]: 修改项目
+              - button "delete 删除项目" [ref=e152]:
+                - generic: delete
+                - generic [ref=e153]: 删除项目
+      - button "add_2 新建项目" [ref=e156]:
+        - generic [ref=e157]: add_2
+        - text: 新建项目
+  - alert [ref=e35]

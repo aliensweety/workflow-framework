@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "c4699476-5639-428b-8c79-e5a22958b31b",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\A_sweeping_cinematic_long_shot_202605052025.jpeg",
+      "resolution": "2K",
+      "filename": "A_sweeping_cinematic_long_shot_202605052025.jpeg",
+      "sizeBytes": 3678935
+    }
+  ],
+  "prompt": "A sweeping cinematic long shot gliding over rain-slicked Wall Street at twilight, golden light bleeding dramatically from towering skyscraper windows onto silent empty streets below, deep atmospheric shadows, faint metallic glint of floating dollar and currency symbols in the air, evoking quiet inexorable financial power, masterpiece classical oil painting on canvas, thick visible brushstrokes with rich impasto texture and layered glazing, dramatic chiaroscuro lighting with warm golden highlights and deep shadows, in the style of Rembrandt and John Singer Sargent, warm rich earthy color palette with vibrant gold accents, visible canvas weave and textured paint layers, professional balanced composition, museum quality, highly textured surface, insightful and timeless atmosphere, no frame, 8k resolution, professional oil painting",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 45548
+}

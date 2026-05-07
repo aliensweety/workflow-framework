@@ -1,0 +1,10 @@
+- main [ref=e2]:
+  - link "Google" [ref=e3] [cursor=pointer]:
+    - /url: //www.google.com
+    - img "Google" [ref=e4]
+  - paragraph [ref=e5]:
+    - text: "404."
+    - insertion [ref=e6]: 出现了错误。
+  - paragraph [ref=e7]:
+    - text: 在此服务器上找不到请求的网址。
+    - insertion [ref=e8]: 这就是我们所知道的全部信息。

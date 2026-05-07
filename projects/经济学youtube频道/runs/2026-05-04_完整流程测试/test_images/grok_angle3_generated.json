@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "a7bdcafe-1204-48f6-a79a-d05b4c818dd5",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\masterpiece_classical_oil_painting_on_202605061011.jpeg",
+      "resolution": "2K",
+      "filename": "masterpiece_classical_oil_painting_on_202605061011.jpeg",
+      "sizeBytes": 3824806
+    }
+  ],
+  "prompt": "masterpiece classical oil painting on canvas, thick visible brushstrokes with rich impasto texture and layered glazing, dramatic chiaroscuro lighting with warm golden highlights and deep shadows, in the style of Rembrandt and John Singer Sargent, warm rich earthy color palette with vibrant gold accents, visible canvas weave and textured paint layers, professional balanced composition, museum quality, highly textured surface, insightful and timeless atmosphere, no frame, 8k resolution, professional oil painting, 16:9 horizontal composition, cinematic storyboard feel, narrative tension, extreme low-angle worm's-eye view with deep focus from foreground to background and subtle Dutch tilt conveying shifting global power, a crumbling ancient gold vault shattered open in the shadowed foreground with broken bars spilling uselessly into sand, a towering central handshake between a commanding American figure in dark suit and a robed Saudi leader silhouetted against a blazing oil derrick, behind them a vast receding American naval fleet on the horizon guarding endless desert pipelines, rivers of luminous dollar bills flowing upward like tributaries into glowing U.S. Treasury buildings that dominate the sky, dramatic scale contrast between tiny broken gold remnants below and the colossal American financial-military apparatus above, rule of thirds guiding the eye from collapse through the deal to perpetual dominance, museum quality, highly textured surface, no frame, 8k resolution, professional oil painting",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 47550
+}

@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "38d44fc1-2b38-40a1-a5c6-dc4f4fe82ab8",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\Dramatic_close-up_of_a_stern_202605052032.jpeg",
+      "resolution": "2K",
+      "filename": "Dramatic_close-up_of_a_stern_202605052032.jpeg",
+      "sizeBytes": 3707578
+    }
+  ],
+  "prompt": "Dramatic close-up of a stern President at a press podium behind the White House, bold headline newspapers scattered on desk showing headline news about economic policy change, intercut with powerful imagery of a massive bank vault door slowly closing, symbolic of the end of an era, dramatic newsroom atmosphere, masterpiece classical oil painting on canvas, thick visible brushstrokes with rich impasto texture and layered glazing, dramatic chiaroscuro lighting with warm golden highlights and deep shadows, in the style of Rembrandt and John Singer Sargent, warm rich earthy color palette with vibrant gold accents, visible canvas weave and textured paint layers, professional balanced composition, museum quality, highly textured surface, insightful and timeless atmosphere, no frame, 8k resolution, professional oil painting",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 46916
+}

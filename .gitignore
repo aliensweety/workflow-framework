@@ -1,0 +1,23 @@
+# Nested git repos inside skills (they have their own history)
+projects/*/.claude/skills/*/.git/
+
+# Run outputs — generated per run, not source
+projects/*/runs/
+
+# Editor / browser artifacts
+.playwright-mcp/
+.obsidian/
+projects/*/.playwright-mcp/
+projects/*/.obsidian/
+
+# Large reference assets (not source)
+*.mp3
+*.mp4
+*.wav
+
+# Misc
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

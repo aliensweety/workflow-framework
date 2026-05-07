@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "8ab21f97-c9c8-4af6-a222-06140882b38c",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\masterpiece_classical_oil_painting_on_202605070843.jpeg",
+      "resolution": "2K",
+      "filename": "masterpiece_classical_oil_painting_on_202605070843.jpeg",
+      "sizeBytes": 3128123
+    }
+  ],
+  "prompt": "masterpiece classical oil painting on canvas, final contemplative scene of endurance, Sarah Wells in Virginia workshop bathed in soft dawn light after storm, close-up on her hands working with subtle data visualizations of adaptive small firms rising like resilient saplings around her, chiaroscuro contrast between past darkness and emerging hope, deep focus showing personal triumph over systemic forces, living ecologies of trust regrowing, cinematic tension resolving into quiet determination, 16:9 horizontal composition",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 45439
+}

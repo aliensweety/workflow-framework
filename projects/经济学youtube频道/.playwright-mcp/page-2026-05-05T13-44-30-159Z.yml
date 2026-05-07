@@ -1,0 +1,135 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T"
+    - generic [ref=e3]:
+      - generic:
+        - generic:
+          - navigation [ref=e12]:
+            - generic [ref=e13]:
+              - button "arrow_back 返回" [ref=e14] [cursor=pointer]:
+                - generic: arrow_back
+                - generic [ref=e15]: 返回
+              - textbox "可编辑文本" [ref=e17]: economics-video
+              - button "more_vert 更多选项" [ref=e18] [cursor=pointer]:
+                - generic: more_vert
+                - generic [ref=e19]: 更多选项
+          - generic [ref=e20]:
+            - generic [ref=e21]:
+              - button "search 搜索" [ref=e22] [cursor=pointer]:
+                - generic: search
+                - generic [ref=e23]: 搜索
+              - textbox [ref=e24]
+            - button "filter_list 排序和过滤" [ref=e25] [cursor=pointer]:
+              - generic [ref=e26]: filter_list
+              - generic [ref=e27]: 排序和过滤
+          - generic [ref=e28]:
+            - generic [ref=e29]:
+              - button "add 添加媒体" [ref=e30] [cursor=pointer]:
+                - generic: add
+                - generic [ref=e31]: 添加媒体
+              - button "play_movies Scenebuilder" [ref=e32] [cursor=pointer]:
+                - generic: play_movies
+                - generic [ref=e33]: Scenebuilder
+              - button "settings_2 查看功能块网格设置" [ref=e34] [cursor=pointer]:
+                - generic: settings_2
+                - generic [ref=e35]: 查看功能块网格设置
+              - button "help 产品帮助" [ref=e36] [cursor=pointer]:
+                - generic: help
+                - generic [ref=e37]: 产品帮助
+              - button "more_vert 更多" [ref=e38] [cursor=pointer]:
+                - generic: more_vert
+                - generic [ref=e39]: 更多
+            - button "PRO 用户头像" [ref=e40]:
+              - generic [ref=e41]: PRO
+              - img "用户头像" [ref=e42]
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - button "dashboard nav_rail_all_media" [ref=e46] [cursor=pointer]:
+            - generic: dashboard
+            - generic [ref=e47]: nav_rail_all_media
+          - button "image 查看图片" [ref=e49] [cursor=pointer]:
+            - generic: image
+            - generic [ref=e50]: 查看图片
+          - button "archive 查看归档" [ref=e52] [cursor=pointer]:
+            - generic: archive
+            - generic [ref=e53]: 查看归档
+        - generic [ref=e59]:
+          - generic [ref=e61]:
+            - generic [ref=e238]:
+              - generic [ref=e239]:
+                - generic [ref=e240]: warning
+                - generic [ref=e241]:
+                  - generic [ref=e242]: 失败
+                  - generic [ref=e243]:
+                    - text: We noticed some unusual activity. Please visit the
+                    - link "Help Center" [ref=e244] [cursor=pointer]:
+                      - /url: https://support.google.com/flow
+                    - text: for more information.
+              - generic [ref=e245]:
+                - button "refresh 重试" [ref=e246] [cursor=pointer]:
+                  - generic [ref=e247]: refresh
+                  - generic [ref=e248]: 重试
+                - button "undo 重复使用提示" [ref=e249] [cursor=pointer]:
+                  - generic [ref=e250]: undo
+                  - generic [ref=e251]: 重复使用提示
+                - button "delete_forever 删除" [ref=e252] [cursor=pointer]:
+                  - generic [ref=e253]: delete_forever
+                  - generic [ref=e254]: 删除
+            - link "生成的图片" [ref=e72] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/546245b4-0f6d-4083-bf42-f4b0578f02c7
+              - img "生成的图片" [ref=e73]
+            - link "生成的图片" [ref=e84] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/cc90327c-4e2d-471f-a2b4-d786eebac50f
+              - img "生成的图片" [ref=e85]
+          - generic [ref=e108]:
+            - link "生成的图片" [ref=e105] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/c3ba6719-6455-4516-b819-236541e925cb
+              - img "生成的图片" [ref=e106]
+            - link "生成的图片" [ref=e119] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/38d44fc1-2b38-40a1-a5c6-dc4f4fe82ab8
+              - img "生成的图片" [ref=e120]
+            - link "生成的图片" [ref=e131] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/d22209b4-b6fc-48f9-a3b2-ed035491688a
+              - img "生成的图片" [ref=e132]
+          - generic [ref=e146]:
+            - link "生成的图片" [ref=e143] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/b70c87aa-f6d0-4c2f-837f-005f41b02330
+              - img "生成的图片" [ref=e144]
+            - link "生成的图片" [ref=e157] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/ac31c2b0-a160-4f58-b6f2-d314519dffed
+              - img "生成的图片" [ref=e158]
+            - link "生成的图片" [ref=e169] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/c4699476-5639-428b-8c79-e5a22958b31b
+              - img "生成的图片" [ref=e170]
+          - generic [ref=e184]:
+            - link "生成的图片" [ref=e181] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/61b08d58-4d9e-4971-8632-846b4290b199
+              - img "生成的图片" [ref=e182]
+            - link "生成的图片" [ref=e195] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/dd14b2e6-0ffb-43b4-8856-d0c154a38a65
+              - img "生成的图片" [ref=e196]
+            - link "生成的图片" [ref=e207] [cursor=pointer]:
+              - /url: /fx/zh/tools/flow/project/4cfa18e8-202b-4ea0-9326-557b39f3fb70/edit/1907dfeb-a3a1-4b61-80af-c5cc04ec592e
+              - img "生成的图片" [ref=e208]
+        - status [ref=e211]
+      - generic [ref=e212]:
+        - textbox [ref=e214]:
+          - paragraph [ref=e258]:
+            - generic:
+              - generic:
+                - generic: 您希望创作什么内容？
+        - generic [ref=e216]:
+          - button "add_2 创建" [ref=e219] [cursor=pointer]:
+            - generic: add_2
+            - generic [ref=e220]: 创建
+          - generic [ref=e221]:
+            - button "🍌 Nano Banana Pro crop_16_9 1x" [ref=e222] [cursor=pointer]:
+              - text: 🍌 Nano Banana Pro
+              - generic [ref=e223]: crop_16_9
+              - text: 1x
+            - button "arrow_forward 创建" [active] [ref=e224] [cursor=pointer]:
+              - generic: arrow_forward
+              - generic [ref=e225]: 创建
+      - generic:
+        - paragraph: Flow 的回答未必正确无误，请注意核查
+  - alert [ref=e11]

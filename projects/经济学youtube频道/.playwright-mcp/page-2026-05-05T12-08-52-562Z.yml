@@ -1,0 +1,91 @@
+- generic [ref=e1]:
+  - dialog "Guided Tour" [ref=e2]:
+    - group "1 of 1" [active] [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - heading "credit_card 新功能：控制 API 费用" [level=2] [ref=e6]:
+            - generic [ref=e7]: credit_card 新功能：控制 API 费用
+          - generic [ref=e8]: 设置每月支出上限，以防止意外超支
+        - button "关闭导览" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]: close
+      - contentinfo [ref=e12]:
+        - link "更多资源" [ref=e14] [cursor=pointer]:
+          - /url: /spend
+          - generic [ref=e15]: 创建支出上限
+  - generic [ref=e20]:
+    - button "Skip to main content" [ref=e21]
+    - generic [ref=e23]:
+      - paragraph [ref=e24]:
+        - text: We have updated our
+        - link "Terms of Service" [ref=e25] [cursor=pointer]:
+          - /url: https://ai.google.dev/gemini-api/terms
+      - button "Dismiss" [ref=e26] [cursor=pointer]
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - button "Toggle navigation menu" [ref=e29] [cursor=pointer]:
+          - generic [ref=e30]: menu_open
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - link "Google AI Studio logo" [ref=e33] [cursor=pointer]:
+              - /url: /prompts/new_chat
+              - img "Google AI Studio logo" [ref=e35]
+            - button "View related products" [ref=e50] [cursor=pointer]:
+              - generic [ref=e51]: expand_more
+          - navigation [ref=e52]:
+            - generic [ref=e54]:
+              - generic [ref=e55]:
+                - link "Playground" [ref=e56] [cursor=pointer]:
+                  - /url: /prompts/new_chat
+                  - generic [ref=e57]: chat_spark
+                  - generic [ref=e58]: Playground
+                  - button [expanded] [ref=e59]: chevron_right
+                - link "History" [ref=e61] [cursor=pointer]:
+                  - /url: /library
+              - generic [ref=e62]:
+                - link "Build" [ref=e63] [cursor=pointer]:
+                  - /url: /apps
+                  - generic [ref=e64]: design_services
+                  - generic [ref=e65]: Build
+                  - button [expanded] [ref=e66]: chevron_right
+                - generic [ref=e67]:
+                  - link "Apps" [ref=e68] [cursor=pointer]:
+                    - /url: /apps?source=user
+                  - link "Gallery" [ref=e69] [cursor=pointer]:
+                    - /url: /apps?source=showcase
+              - link "Dashboard" [ref=e70] [cursor=pointer]:
+                - /url: /api-keys
+                - generic [ref=e71]: speed
+                - generic [ref=e72]: Dashboard
+                - generic [ref=e73]: chevron_right
+              - link "Documentation" [ref=e74] [cursor=pointer]:
+                - /url: https://ai.google.dev/gemini-api/docs
+                - generic [ref=e75]: developer_guide
+                - generic [ref=e76]: Documentation
+                - generic [ref=e77]: arrow_outward
+            - generic [ref=e79]:
+              - button "Search Ctrl /" [ref=e80] [cursor=pointer]:
+                - generic [ref=e81]: search
+                - generic [ref=e82]: Search
+                - generic [ref=e83]: Ctrl /
+              - button "What's new" [ref=e85] [cursor=pointer]:
+                - generic [ref=e86]: notifications
+                - text: What's new
+              - button "Get API key" [ref=e88] [cursor=pointer]:
+                - generic [ref=e89]: key
+                - text: Get API key
+              - button "Settings" [ref=e91] [cursor=pointer]:
+                - generic [ref=e92]: settings
+                - text: Settings
+              - generic [ref=e93]:
+                - button "3w2com@gmail.com Pro" [ref=e94] [cursor=pointer]:
+                  - generic [ref=e95]: 3w2com@gmail.com
+                  - generic [ref=e96]: Pro
+                - button "Google 账号：gle goo (3w2com@gmail.com)" [ref=e99] [cursor=pointer]:
+                  - img "gle goo" [ref=e102]
+      - main [ref=e103]:
+        - generic [ref=e110]:
+          - heading "Page not found" [level=2] [ref=e111]
+          - paragraph [ref=e112]: Check that the URL was entered correctly and try again
+          - button "Go to library" [ref=e113] [cursor=pointer]:
+            - generic [ref=e114]: home_storage
+            - text: Go to library

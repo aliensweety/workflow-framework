@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "images": [
+    {
+      "imageUuid": "fe28cf9f-4454-4bcc-8c5d-01d1b6386698",
+      "imagePath": "D:\\cc-project\\web-skill-creator-cdp-3\\.claude\\skills\\google-flow\\runtime\\masterpiece_classical_oil_painting_on_202605070838.jpeg",
+      "resolution": "2K",
+      "filename": "masterpiece_classical_oil_painting_on_202605070838.jpeg",
+      "sizeBytes": 3140500
+    }
+  ],
+  "prompt": "masterpiece classical oil painting on canvas, dynamic split-panel showing harmonious global supply chain, left side innovative American design studio with Sarah Wells sketching elegant bags, right side bustling Chinese factory floor with precision manufacturing under bright lights, connected by glowing container ship route across Pacific, deep focus and dramatic scale contrast, chiaroscuro, 16:9 horizontal composition",
+  "projectId": "4cfa18e8-202b-4ea0-9326-557b39f3fb70",
+  "took_ms": 58734
+}

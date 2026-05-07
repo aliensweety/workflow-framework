@@ -1,0 +1,43 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T"
+    - generic [ref=e3]:
+      - list [ref=e4]:
+        - listitem [ref=e5]:
+          - link "Flow" [ref=e6] [cursor=pointer]:
+            - /url: /fx/tools/flow
+      - generic [ref=e7]:
+        - link "tv Flow TV" [ref=e8] [cursor=pointer]:
+          - /url: https://labs.google/flow/tv
+          - generic [ref=e9]: tv
+          - text: Flow TV
+        - link [ref=e10] [cursor=pointer]:
+          - /url: https://discord.com/invite/googlelabs
+          - img [ref=e12]
+        - link "Instagram Logo" [ref=e14] [cursor=pointer]:
+          - /url: https://www.instagram.com/flowbygoogle
+          - img "Instagram Logo" [ref=e15]
+        - link "X (Twitter) Logo" [ref=e16] [cursor=pointer]:
+          - /url: https://x.com/FlowbyGoogle
+          - img "X (Twitter) Logo" [ref=e17]
+        - button "help_outlined Flow Help Center Flow Help Center" [ref=e18]:
+          - generic: help_outlined
+          - generic [ref=e19]: Flow Help Center
+          - generic [ref=e20]: Flow Help Center
+        - generic [ref=e21] [cursor=pointer]: more_vert
+        - button "User profile image" [ref=e22]:
+          - img "User profile image" [ref=e23]
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: L
+        - generic [ref=e28]: o
+        - generic [ref=e29]: a
+        - generic [ref=e30]: d
+        - generic [ref=e31]: i
+        - generic [ref=e32]: "n"
+        - generic [ref=e33]: g
+        - generic [ref=e34]: …
+      - generic:
+        - generic:
+          - img
+  - alert [ref=e35]
