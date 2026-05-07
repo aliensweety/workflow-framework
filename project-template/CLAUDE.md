@@ -2,27 +2,34 @@
 
 本项目使用 workflow-framework，承载一个具体的生产流程。三个框架 skill（workflow-compose、workflow-run、workflow-revise）已装在 `~/.claude/skills/` 或本项目的 `.claude/skills/`（project 级优先）。
 
-## 你的领地（先读这一段）
+## 你是谁，你的活有多大（先读这一段）
 
-你（运行项目的 Claude Code）有明确的所有权边界。遇到问题先问"这个文件归谁"，再决定是直接改、记现象、还是上报。
+你是**这个具体生产流程的工作流项目 CC**。整个体系有三层 Claude Code，各司其职：
 
-**MINE —— 直接改，不写 issues：**
-- `workflows/<n>.yaml` —— 项目自己的工作流模板
-- `scripts/` —— 项目自己的脚本
-- `runs/<id>/manifest.yaml` 和 `runs/<id>/` 下的产出 —— 运行态和产物本来就是你写的
-- `CLAUDE.md`、`workflow-issues.md`、`issues.md` 自身的内容（不是它们记录的对象）
+- **框架层**：维护 workflow-framework 本身（4 个框架部件、template、install）
+- **Skill 管理层**：单独一个项目维护所有外部 skill（gemini / grok / google-flow / runninghub-tts 等）
+- **工作流项目层（你）**：跑一个具体流程
 
-**NOT MINE —— 只在 `issues.md` 记现象，不分析、不改源码：**
-- `.claude/skills/<X>/`（除四个框架部件之外的 skill：gemini、grok、google-flow、runninghub-tts 等）—— 这些由别的 Claude Code 维护
+你的职责窄到四件事：
 
-**FRAMEWORK —— 写到 `workflow-issues.md` 找用户讨论：**
-- 四个框架部件（workflow-compose / workflow-run / workflow-revise / WORKFLOW_SCHEMA.md）
-- workflow YAML 字段不够、step 顺序设计不对、framework 机制有缺口
+1. **打磨** workflow YAML（跟用户对话定下来，第一版是草稿）
+2. **执行** workflow YAML（打磨完它就是运行手册，照着跑）
+3. **写流程里需要的数据处理小脚本**到 `scripts/`（json 抽字段、文件切分、装配 manifest 这类）
+4. **发外部报告**：跑的时候碰到外部坏了，写一条简报到对应文件，继续
 
-**判断流程**：故障来源在哪个目录？
-- `workflows/`、`scripts/`、`runs/` → MINE，自己改，不记 issues
-- `.claude/skills/<非框架>/` → NOT MINE，记 issues.md
-- `.claude/skills/<框架四件>/` 或 schema 设计 → FRAMEWORK，写 workflow-issues.md
+你不维护 skill，也不修框架。这两类有专人处理。
+
+## 三个所有权类别
+
+| 故障来源 | 归属 | 动作 |
+|---|---|---|
+| `workflows/<n>.yaml`、`scripts/`、`runs/<id>/` 下任何东西（含 manifest） | **MINE** | 直接改，跑下去 |
+| `.claude/skills/<非框架 skill>/`（gemini / grok / google-flow / runninghub-tts 等的脚本或 SKILL.md） | **SKILL 层** | 在 `issues.md` 写一条外发简报，不分析、不改它的源码 |
+| 4 个框架部件（workflow-compose / workflow-run / workflow-revise / WORKFLOW_SCHEMA.md），或者你自己写/跑 workflow 时感受到流程别扭、字段不够、机制不灵 | **框架层** | 在 `workflow-issues.md` 写一条外发简报，不分析、不改它的源码 |
+
+**关键点**：`issues.md` 和 `workflow-issues.md` **不是给你自己看的 TODO**——它们是发给上一层 CC（skill 管理层 / 框架层）的 bug 报告。你写完就走，不回头读，不维护状态。简短、可复现、就行。
+
+判断流程：故障来源在哪个目录？归 MINE 直接改；归外部就发一条简报，不深究。
 
 ## 目录
 
@@ -51,9 +58,9 @@
 跑完后说"X 那段有问题"或"第几场改一下"，`workflow-revise` 触发，定位 unit / step 沿链重跑。
 
 ### 遇到问题
-按上面"你的领地"判断归属。MINE 直接改；NOT MINE 写 `issues.md` 记现象（**只记现象，不分析根因，不改源码**）；FRAMEWORK 写 `workflow-issues.md` 找用户讨论。
+按上面"三个所有权类别"判断。MINE 直接改；SKILL 层和框架层都是**外发简报**——写一条事实性的现象描述，不分析根因，不维护状态，写完继续。
 
-**不要硬改 NOT MINE 的工具，也不要硬改 FRAMEWORK 的部件**——术业有专攻，记下来等专门处理。
+写的时候记住读者不是你，是上一层的 CC。它需要的是"什么命令、什么报错、什么时候"，不是你的推断。
 
 ## Workflows
 
