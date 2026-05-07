@@ -1,6 +1,28 @@
 # Project CLAUDE.md
 
-本项目使用 workflow-framework。三个框架 skill（workflow-compose、workflow-run、workflow-revise）已装在 `~/.claude/skills/`（也可能复制到了本项目的 `.claude/skills/`，project 级优先）。
+本项目使用 workflow-framework，承载一个具体的生产流程。三个框架 skill（workflow-compose、workflow-run、workflow-revise）已装在 `~/.claude/skills/` 或本项目的 `.claude/skills/`（project 级优先）。
+
+## 你的领地（先读这一段）
+
+你（运行项目的 Claude Code）有明确的所有权边界。遇到问题先问"这个文件归谁"，再决定是直接改、记现象、还是上报。
+
+**MINE —— 直接改，不写 issues：**
+- `workflows/<n>.yaml` —— 项目自己的工作流模板
+- `scripts/` —— 项目自己的脚本
+- `runs/<id>/manifest.yaml` 和 `runs/<id>/` 下的产出 —— 运行态和产物本来就是你写的
+- `CLAUDE.md`、`workflow-issues.md`、`issues.md` 自身的内容（不是它们记录的对象）
+
+**NOT MINE —— 只在 `issues.md` 记现象，不分析、不改源码：**
+- `.claude/skills/<X>/`（除四个框架部件之外的 skill：gemini、grok、google-flow、runninghub-tts 等）—— 这些由别的 Claude Code 维护
+
+**FRAMEWORK —— 写到 `workflow-issues.md` 找用户讨论：**
+- 四个框架部件（workflow-compose / workflow-run / workflow-revise / WORKFLOW_SCHEMA.md）
+- workflow YAML 字段不够、step 顺序设计不对、framework 机制有缺口
+
+**判断流程**：故障来源在哪个目录？
+- `workflows/`、`scripts/`、`runs/` → MINE，自己改，不记 issues
+- `.claude/skills/<非框架>/` → NOT MINE，记 issues.md
+- `.claude/skills/<框架四件>/` 或 schema 设计 → FRAMEWORK，写 workflow-issues.md
 
 ## 目录
 
@@ -29,10 +51,9 @@
 跑完后说"X 那段有问题"或"第几场改一下"，`workflow-revise` 触发，定位 unit / step 沿链重跑。
 
 ### 遇到问题
-跑工作流时遇到工具问题（skill 报错、脚本 bug、缺依赖）→ 写到 `issues.md`，继续往下跑或停下告诉用户。
-遇到流程问题（step 顺序不对、字段不够、想加新机制）→ 写到 `workflow-issues.md`，找用户讨论。
+按上面"你的领地"判断归属。MINE 直接改；NOT MINE 写 `issues.md` 记现象（**只记现象，不分析根因，不改源码**）；FRAMEWORK 写 `workflow-issues.md` 找用户讨论。
 
-**不要硬改工具或框架**——术业有专攻，记下来等专门处理。
+**不要硬改 NOT MINE 的工具，也不要硬改 FRAMEWORK 的部件**——术业有专攻，记下来等专门处理。
 
 ## Workflows
 

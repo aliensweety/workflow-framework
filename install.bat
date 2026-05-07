@@ -139,11 +139,16 @@ if not exist "%PROJECTS_DIR%" (
 echo Source : %FRAMEWORK_SKILLS%
 echo Target : %PROJECTS_DIR%\^<each-project^>\.claude\skills\
 echo.
-echo Will overwrite ONLY these framework items:
+echo Will overwrite these framework items:
 echo   - WORKFLOW_SCHEMA.md
 echo   - workflow-compose\
 echo   - workflow-run\
 echo   - workflow-revise\
+echo.
+echo Will copy these only if missing (won't clobber your edits):
+echo   - CLAUDE.md
+echo   - issues.md
+echo   - workflow-issues.md
 echo.
 echo Project-private skills (gemini, grok, google-flow, etc.) NOT touched.
 echo.
@@ -194,6 +199,18 @@ for /D %%P in ("%PROJECTS_DIR%\*") do (
                     echo   [FAIL] %%S\
                 ) else (
                     echo   [OK]   %%S\
+                )
+            )
+        )
+
+        rem Copy template root files only if missing (don't clobber user edits)
+        for %%F in (CLAUDE.md issues.md workflow-issues.md) do (
+            if exist "%TEMPLATE%\%%F" (
+                if not exist "%%P\%%F" (
+                    copy /Y "%TEMPLATE%\%%F" "%%P\%%F" >nul
+                    echo   [NEW]  %%F
+                ) else (
+                    echo   [KEEP] %%F  ^(see project-template\%%F for the new template^)
                 )
             )
         )

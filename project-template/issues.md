@@ -1,26 +1,40 @@
-# Tool Issues
+# issues.md —— 工具问题（NOT MINE）
 
-记录工具问题——skill / 脚本的 bug、缺依赖、调用方式不顺手等等。
+记录 `.claude/skills/<X>/` 下非框架 skill 的 bug、缺依赖、调用异常。
+处理由专门维护那个 skill 的 Claude Code 负责。本文件**只记现象**。
 
-这些不是 workflow 的事，应该回到对应 skill / 脚本的源项目里修。
-本文档只负责记录现象，不负责修复。
+## 写入约束（硬性）
 
-格式建议（不强制）：
+只用这三个字段：
 
+```
 ---
 
-## <Skill 或 脚本名>
+## <skill 或脚本名> — <一句话现象>
 
-**状态**：open | in_progress | resolved | wontfix
+**运行命令**：（能复现的完整命令）
 
-**问题描述**：
+**报错 / 现象**：（原始报错或观察到的异常）
 
-**复现条件 / 错误信息**：
-
-**临时 workaround**（如有）：
-
-**发现时间**：
+**发现时间**：YYYY-MM-DD
 
 ---
+```
+
+## 禁字段
+
+下列字段不写到本文件：
+
+- `根因` / `根本原因` / `分析` —— 不做根因推断
+- `修复` / `修复建议` —— 不在这里改源码
+- `规范` / `全局规范` / `约定` —— 是项目规则，写到 `CLAUDE.md`
+- `方法论` / `经验` —— 写到 `decisions.md` 或对应 skill 的 README
+- `状态`（open/resolved 等）—— 不维护状态机，记完就走
+
+## 不归属本文件
+
+- 你自己的 `workflows/`、`scripts/`、`runs/` 出问题 → 直接改，不记 issues
+- 框架部件（workflow-compose / workflow-run / workflow-revise / WORKFLOW_SCHEMA.md）问题 → 写 `workflow-issues.md`
+- workflow YAML 设计问题 → 写 `workflow-issues.md`
 
 （在此追加新问题）

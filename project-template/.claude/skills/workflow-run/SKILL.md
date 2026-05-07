@@ -157,16 +157,29 @@ Claude Code 自己用基础工具（Read、Edit、Bash、推理）完成。读 s
 
 **fan-out 场景下的 ask**：第一个 unit 跑完就停下问。用户确认方向后，剩余 units 默认提议降级 report 批量跑。不会每个 unit 都打断。
 
-## 遇到工具问题怎么办
+## 遇到问题：先分诊，再行动
 
-跑某个 step 时如果发现是工具的问题（脚本 bug、skill 调用异常、依赖缺失等等），**不要硬改工具**，写到项目的 `issues.md` 里（追加一段，描述现象和复现条件），然后：
+跑 step 出错时，**先按"故障来源在哪个目录"分诊**，再决定动作。这是项目 CLAUDE.md "你的领地"那段的运行时执行。
 
+| 故障来源 | 归属 | 动作 |
+|---|---|---|
+| `workflows/<n>.yaml`（字段写错、command 调不通需要按 intent 改写） | MINE | **直接改 YAML**，不写 issues |
+| `scripts/`（项目自己的脚本 bug） | MINE | **直接改脚本**，不写 issues |
+| `runs/<id>/manifest.yaml`（状态错乱、字段缺失） | MINE | **直接修 manifest**，不写 issues |
+| `runs/<id>/` 产出物（文件错位、格式问题） | MINE | **直接动产出**，不写 issues |
+| `.claude/skills/<非框架>/`（gemini / grok / google-flow / runninghub-tts 等的脚本或 SKILL.md） | NOT MINE | **写 `issues.md`**（只记现象，不分析根因，不改源码） |
+| 框架四件（workflow-compose / workflow-run / workflow-revise / WORKFLOW_SCHEMA.md）或 workflow 设计层面 | FRAMEWORK | **写 `workflow-issues.md`** 找用户讨论 |
+
+**MINE 的处理**：直接改完继续跑。这是你的领地，无需告知"我打算改"——直接改、跑下去、跑完简报里提一句就行。
+
+**NOT MINE 的处理**：
+- 在 `issues.md` 追加一条（按 issues.md 模板的硬约束字段：运行命令、报错/现象、发现时间——不写根因/修复/状态）
 - 如果有 workaround 能让当前 run 继续，告诉用户后跑下去
-- 如果走不下去，告诉用户："这一步因为 [工具] 的 [问题] 跑不动，已写入 issues.md。建议处理完再回来 resume。"
+- 如果走不下去："这一步因为 [skill 名] 的 [现象] 跑不动，已写入 issues.md。建议处理完再回来 resume。"
 
-**判断"工具问题" vs "流程问题"**：
-- 工具问题 → `issues.md`：调用方式、参数、依赖、API 错误、脚本 bug
-- 流程问题 → `workflow-issues.md`：step 顺序、字段不够、需要新机制、autonomy 设置不当
+**FRAMEWORK 的处理**：在 `workflow-issues.md` 追加一条描述问题和影响，告诉用户"这一步触发了一个框架/流程层面的问题，已写入 workflow-issues.md，需要你看一眼"，然后停。
+
+**禁止**：不要把"我自己 workflow YAML 里写错了一个字段"这种事写进 issues.md——那是 MINE，自己改了就行。reflexively 写 issues 不是负责，是把自己的活推出去。
 
 ## 完成
 
@@ -183,4 +196,5 @@ Claude Code 自己用基础工具（Read、Edit、Bash、推理）完成。读 s
 - **不要把 logs 和产出物混一起**。日志进 `{run.dir}/logs/`，正式产出在 `{run.dir}/` 其他位置。
 - **不要"修好就偷偷继续"**。ask 节点改完要再确认一次。
 - **不要机械执行失败的 command**。command 是示例，环境变了要按 intent 重判断。
-- **不要为了让 run 继续就硬改工具源代码**。写到 issues.md，让专门的 Claude Code 处理。
+- **不要为了让 run 继续就硬改 NOT MINE 的工具源代码**（`.claude/skills/<非框架>/`）。写到 issues.md，让专门的 Claude Code 处理。
+- **不要把 MINE 的问题推到 issues.md 上**。workflows/、scripts/、runs/ 出问题就是你的活，自己改。
