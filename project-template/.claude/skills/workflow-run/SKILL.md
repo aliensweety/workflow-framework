@@ -157,31 +157,17 @@ Claude Code 自己用基础工具（Read、Edit、Bash、推理）完成。读 s
 
 **fan-out 场景下的 ask**：第一个 unit 跑完就停下问。用户确认方向后，剩余 units 默认提议降级 report 批量跑。不会每个 unit 都打断。
 
-## 遇到问题：先分诊，再行动
+## 遇到问题：按目录分诊
 
-跑 step 出错时，**先按"故障来源在哪个目录"分诊**。详细规则在项目 CLAUDE.md "你是谁，你的活有多大"那段——这里只放运行时速查表。
+| 故障来源 | 动作 |
+|---|---|
+| `workflows/`、`scripts/`、`runs/` 下任何东西 | 直接改，跑下去 |
+| `.claude/skills/<非框架>/`（gemini / grok / google-flow / runninghub-tts 等） | 写一条到 `tool-issues.md`，继续跑或停下告诉用户 |
+| 4 个框架部件，或按指引跑下来感觉不顺 | 写一条到 `workflow-issues.md` |
 
-| 故障来源 | 归属 | 动作 |
-|---|---|---|
-| `workflows/<n>.yaml`（字段写错、command 调不通需按 intent 改写） | MINE | 直接改 YAML，跑下去 |
-| `scripts/`（项目自己的脚本 bug） | MINE | 直接改脚本，跑下去 |
-| `runs/<id>/manifest.yaml`（状态错乱、字段缺失） | MINE | 直接修 manifest，跑下去 |
-| `runs/<id>/` 产出物（文件错位、格式问题） | MINE | 直接动产出，跑下去 |
-| `.claude/skills/<非框架>/`（gemini / grok / google-flow / runninghub-tts 等） | SKILL 层 | **外发** `issues.md` 简报 |
-| 4 个框架部件 或 workflow 设计层面 | 框架层 | **外发** `workflow-issues.md` 简报 |
+两个 issues 文件**只写不读**——是发给上一层 CC 的简报，写现象就够（命令、报错、时间）。不分析根因，不写"修复建议"，不维护状态。写完继续。
 
-**MINE 的处理**：是你的领地，直接改、继续跑、跑完简报里一句话提一下。
-
-**外发到 `issues.md` 的处理**：
-- 按 issues.md 模板硬约束字段写一条（运行命令 / 报错 / 发现时间）。**它不是你回头看的 TODO，是发给 Skill 管理层 CC 的报告**——写完就走，不分析、不维护状态。
-- 如有 workaround 能让 run 继续，告诉用户后跑下去
-- 走不下去：告诉用户"这一步因为 [skill 名] 的 [现象] 跑不动，已写入 issues.md。等 skill 修好后 resume。"
-
-**外发到 `workflow-issues.md` 的处理**：
-- 同样的"外发"逻辑——发给框架层 CC，不是你回头看的。包含 (a) 框架部件问题 和 (b) 行为信号（你打磨/执行时感到不顺、用户指出你没遵循流程等）。
-- 写完告诉用户："这里触发了一个框架层信号，已写入 workflow-issues.md。"
-
-**禁止**：把 MINE 的活推到外发文件里。"我 workflow YAML 自己写错了"、"我 manifest 状态乱了"、"我 scripts 脚本有 bug"——这些是你自己的活，自己改了就行。外发文件是给上一层 CC 用的，塞进自己的活只会干扰对方处理真正的外部问题。
+走不下去时告诉用户："这一步因为 [skill] 的 [现象] 跑不动，已写入 tool-issues.md。"
 
 ## 完成
 
@@ -198,6 +184,6 @@ Claude Code 自己用基础工具（Read、Edit、Bash、推理）完成。读 s
 - **不要把 logs 和产出物混一起**。日志进 `{run.dir}/logs/`，正式产出在 `{run.dir}/` 其他位置。
 - **不要"修好就偷偷继续"**。ask 节点改完要再确认一次。
 - **不要机械执行失败的 command**。command 是示例，环境变了要按 intent 重判断。
-- **不要为了让 run 继续就硬改外部 skill 源代码**（`.claude/skills/<非框架>/`）。外发到 issues.md，让 skill 管理层处理。
-- **不要把 MINE 的问题推到外发文件上**。workflows/、scripts/、runs/ 是你的活，自己改。
-- **不要回头读 issues.md / workflow-issues.md**——它们不是你的待办，是给上一层 CC 看的。写完就走。
+- **不要硬改外部 skill 源代码**（`.claude/skills/<非框架>/`）。外发到 tool-issues.md。
+- **不要把自己 workflows/ scripts/ runs/ 的问题推到外发文件**。是你的活，自己改。
+- **不要回头读两个 issues 文件**——它们不是你的待办。

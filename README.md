@@ -24,7 +24,7 @@ Claude Code 驱动的工作流框架。把"稳定可重复的生产流程"变成
 - **dispatch**：`inline`（默认）/ `subagent`——长任务、大输出派给 sub-agent 隔离主会话
 - **iterates_over: units**：fan-out 起点把 N 个切片写进 manifest.units，之后步骤对每个 unit 跑一次
 - **parallelism**：fan-out step 内 units 之间的并行度，默认 1
-- **issues 分流**：工具问题写 `issues.md`，流程问题写 `workflow-issues.md`，不硬改工具或框架
+- **issues 外发**：工具坏了写 `tool-issues.md`，框架/流程不顺写 `workflow-issues.md`——两份都是发给上一层 CC 的简报，项目自己只写不读
 
 ## 安装与更新
 

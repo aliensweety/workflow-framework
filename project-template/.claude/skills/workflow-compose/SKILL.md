@@ -106,15 +106,9 @@ intent: |
 - 建 skill 骨架：`.claude/skills/<skill-name>/SKILL.md`（frontmatter + 空内容 + TODO）
 - 建 script 骨架：`scripts/<n>.py`（或其他语言）
 
-### 更新 CLAUDE.md
-
-在项目根 CLAUDE.md 的 "Workflows" 小节登记这个新 workflow：名字 + intent 第一句 + 路径。
-
 ## 生成后提醒用户
 
-> "草稿已出。进入打磨阶段——说'跑一下这个 workflow'，workflow-run 会触发；第一次跑会在思考型节点停下来和你对齐。打磨完后把那些节点的 autonomy 从 ask 改成 report，就进入稳定生产了。
->
-> 跑的过程中遇到工具问题（脚本 bug、skill 不顺手）写到 issues.md；流程问题（step 顺序、字段不够）写到 workflow-issues.md。"
+> "草稿已出。进入打磨阶段——说'跑一下这个 workflow'，workflow-run 会触发；第一次跑会在思考型节点停下来和你对齐。打磨完后把那些节点的 autonomy 从 ask 改成 report，就进入稳定生产了。"
 
 ## 需要警惕的模式
 

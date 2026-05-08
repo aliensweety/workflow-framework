@@ -293,17 +293,11 @@ my-project/
 │   └── <run_id>/
 │       ├── manifest.yaml
 │       └── <产出物...>
-├── issues.md                        # 工具问题（skill / 脚本 bug 和缺陷）
-├── workflow-issues.md               # 流程/架构问题（workflow 和 framework 改进）
+├── tool-issues.md                   # 跑工具坏了的简报（命令+报错），外发给 skill/工具管理层
+├── workflow-issues.md               # 框架/流程不顺的简报（现象就行），外发给框架层
 └── decisions.md                     # 设计决策和原理（不在 runtime 加载）
 ```
 
 **项目私有 skill 必须放在 `.claude/skills/` 下**（Claude Code 的硬性规定），不能是裸 `skills/`。
 
-### issues.md 和 workflow-issues.md 的分工
-
-**issues.md ——工具问题**：跑某个 skill 或脚本时遇到 bug、缺依赖、调用方式不顺手。这些回到对应工具的源项目修。运行项目的 Claude Code 只记现象。
-
-**workflow-issues.md ——流程/架构问题**：step 顺序不对、字段不够用、framework 某个机制别扭、想加新能力。这些找用户讨论再决定。
-
-**机制极简**：两份 markdown，按时间或主题追加写。不需要状态字段、不需要 ID。Claude Code 跑工作流时遇到问题，写下来一两段，继续往下跑。
+两个 issues 文件**只写不读**——是发给上一层 CC 的简报，不是项目自己的 TODO。机制极简：追加写，不维护状态。

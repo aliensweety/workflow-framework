@@ -147,7 +147,7 @@ echo   - workflow-revise\
 echo.
 echo Will copy these only if missing (won't clobber your edits):
 echo   - CLAUDE.md
-echo   - issues.md
+echo   - tool-issues.md
 echo   - workflow-issues.md
 echo.
 echo Project-private skills (gemini, grok, google-flow, etc.) NOT touched.
@@ -204,7 +204,7 @@ for /D %%P in ("%PROJECTS_DIR%\*") do (
         )
 
         rem Copy template root files only if missing (don't clobber user edits)
-        for %%F in (CLAUDE.md issues.md workflow-issues.md) do (
+        for %%F in (CLAUDE.md tool-issues.md workflow-issues.md) do (
             if exist "%TEMPLATE%\%%F" (
                 if not exist "%%P\%%F" (
                     copy /Y "%TEMPLATE%\%%F" "%%P\%%F" >nul

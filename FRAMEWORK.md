@@ -127,14 +127,14 @@ step 怎么被派发执行：
 
 Claude Code 自己定位到 unit、自己沿 workflow 的 step 顺序推断下游需要重跑的范围、自己更新 manifest、自己重跑。这是和 N8N 最大的区别——N8N 要人去点节点、拖连线、改数据映射，这里只需要说话。
 
-### 机制六：issues 分流
+### 机制六：issues 外发分流
 
-项目跑起来后，**问题归项目，不归 workflow**。每个项目根目录有两份 issues 文件：
+项目跑起来后，**两份 issues 文件是发给上一层 CC 的简报**，不是项目自己的 TODO。工作流项目 CC 只写不读、不分析、不维护状态：
 
-- **`issues.md`** ——工具问题。跑某个 skill / 脚本时遇到 bug、缺依赖、调用方式不顺手等等。这些不是 workflow 的事，应该回到对应 skill / 脚本的源项目里修。workflow 项目只负责记录现象，不硬改工具。
-- **`workflow-issues.md`** ——流程或架构问题。step 顺序不对、字段不够用、framework 某个机制别扭。这些找你（用户）讨论，决定是改 workflow 还是反馈给框架本身。
+- **`tool-issues.md`** ——外部 skill / 工具坏了。命令 + 报错 + 时间，发给 skill/工具管理层 CC 处理。
+- **`workflow-issues.md`** ——按当前框架指引跑下来感觉不顺、效果不好。现象 + 场景 + 时间，发给框架层 CC（也就是维护这个仓库的那层）处理。
 
-机制极简：就是两份 markdown，追加写。Claude Code 跑工作流时遇到问题，写下来，继续。**不要让运行项目的 Claude Code 去改工具或框架**——术业有专攻，写下来等专门处理。
+三层 CC 各司其职：框架层维护 framework 本身、skill 管理层维护外部 skill、工作流项目层只跑流程。**不要让工作流项目的 CC 去改工具或框架**——它的活窄到只有打磨/执行 workflow 和写自己的 scripts。
 
 ## 一组明确的"不做什么"
 
