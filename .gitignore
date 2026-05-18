@@ -1,14 +1,9 @@
-# Nested git repos inside skills (they have their own history)
-projects/*/.claude/skills/*/.git/
-
-# Run outputs — generated per run, not source
-projects/*/runs/
+# Workflow projects — each lives in its own repo or stays local
+projects/
 
 # Editor / browser artifacts
 .playwright-mcp/
 .obsidian/
-projects/*/.playwright-mcp/
-projects/*/.obsidian/
 
 # Large reference assets (not source)
 *.mp3

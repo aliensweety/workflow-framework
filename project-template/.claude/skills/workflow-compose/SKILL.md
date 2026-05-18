@@ -7,7 +7,7 @@ description: 通过采访生成 workflow YAML 模板。当用户说"做一个新
 
 把一个想法，变成一份能跑的 workflow YAML。
 
-核心产出物是 `workflows/<n>.yaml`。本 skill 只负责"把意图结构化"，不负责"把每个节点都敲定到可执行"——那是打磨阶段的事。
+核心产出物是项目根 `workflow.yaml`。本 skill 只负责"把意图结构化"，不负责"把每个节点都敲定到可执行"——那是打磨阶段的事。
 
 ## 前置阅读
 
@@ -82,7 +82,7 @@ description: 通过采访生成 workflow YAML 模板。当用户说"做一个新
 
 ### 生成 workflow YAML
 
-1. 写在 `workflows/<n>.yaml`。文件名用 kebab-case。
+1. 写在项目根 `workflow.yaml`。
 2. `intent` 字段要有密度。参考模板：
 
 ```

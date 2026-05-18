@@ -28,6 +28,17 @@ if not exist "%FRAMEWORK_SKILLS%" (
     exit /b 1
 )
 
+rem --- Read config ---
+set "CONFIG_FILE=%SCRIPT_DIR%framework.config.yaml"
+set "REPO_URL="
+if exist "%CONFIG_FILE%" (
+    for /f "usebackq tokens=2 delims=: " %%a in (`findstr "github_repository" "%CONFIG_FILE%"`) do set "REPO_URL=%%~a"
+)
+if "!REPO_URL!"=="" (
+    echo [WARN] Could not read github_repository from framework.config.yaml.
+    echo The new project will keep the placeholder URL -- edit it manually.
+)
+
 :menu
 cls
 echo.
@@ -99,9 +110,13 @@ if errorlevel 1 (
 
 rem Remove the .gitkeep that lived in template's empty dirs
 if exist "!PROJECT_DIR!\.claude\skills\.gitkeep" del /Q "!PROJECT_DIR!\.claude\skills\.gitkeep"
-if exist "!PROJECT_DIR!\workflows\.gitkeep" del /Q "!PROJECT_DIR!\workflows\.gitkeep"
 if exist "!PROJECT_DIR!\scripts\.gitkeep" del /Q "!PROJECT_DIR!\scripts\.gitkeep"
 if exist "!PROJECT_DIR!\runs\.gitkeep" del /Q "!PROJECT_DIR!\runs\.gitkeep"
+
+rem Inject the framework repo URL into CLAUDE.md
+if not "!REPO_URL!"=="" (
+    powershell -NoProfile -Command "(Get-Content '!PROJECT_DIR!\CLAUDE.md') -replace '__FRAMEWORK_REPO__', '!REPO_URL!' | Set-Content '!PROJECT_DIR!\CLAUDE.md' -Encoding UTF8"
+)
 
 echo.
 echo Done. Project created at:
@@ -116,6 +131,13 @@ echo   claude
 echo.
 echo Inside Claude Code:
 echo   "Help me design a new workflow for X"
+echo.
+rem Check gh is available for issue submission
+where gh >nul 2>nul
+if errorlevel 1 (
+    echo [NOTE] gh CLI not found. Install it to submit workflow issues:
+    echo   https://cli.github.com/
+)
 echo.
 pause
 goto menu
@@ -147,8 +169,7 @@ echo   - workflow-revise\
 echo.
 echo Will copy these only if missing (won't clobber your edits):
 echo   - CLAUDE.md
-echo   - tool-issues.md
-echo   - workflow-issues.md
+echo   - process-findings.md
 echo.
 echo Project-private skills (gemini, grok, google-flow, etc.) NOT touched.
 echo.
@@ -204,7 +225,7 @@ for /D %%P in ("%PROJECTS_DIR%\*") do (
         )
 
         rem Copy template root files only if missing (don't clobber user edits)
-        for %%F in (CLAUDE.md tool-issues.md workflow-issues.md) do (
+        for %%F in (CLAUDE.md process-findings.md) do (
             if exist "%TEMPLATE%\%%F" (
                 if not exist "%%P\%%F" (
                     copy /Y "%TEMPLATE%\%%F" "%%P\%%F" >nul
