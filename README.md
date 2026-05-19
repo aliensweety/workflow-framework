@@ -4,70 +4,59 @@ Claude Code 驱动的工作流框架。把"稳定可重复的生产流程"变成
 
 ## 读什么
 
-- **[FRAMEWORK.md](./FRAMEWORK.md)** —— 项目 DNA。设计理念、核心价值、关键机制、边界。对"为什么这么设计"有疑问时读这份。不在运行时默认加载。
+- **[FRAMEWORK.md](./FRAMEWORK.md)** —— 项目 DNA。设计理念、核心原则、边界、演化哲学。对"为什么这么设计"有疑问时读这份。不在运行时默认加载。
 - **[CLAUDE.md](./CLAUDE.md)** —— 本仓入口。issue 处理流程、项目结构。
-- **[project-template/.claude/skills/WORKFLOW_SCHEMA.md](./project-template/.claude/skills/WORKFLOW_SCHEMA.md)** —— 运行时规范。workflow YAML 和 manifest YAML 的字段定义。三个 skill 都引用它。
-- **[examples/book-review-video.yaml](./examples/book-review-video.yaml)** —— 一个完整示例。
+- **[project-template/.claude/skills/WORKFLOW_SCHEMA.md](./project-template/.claude/skills/WORKFLOW_SCHEMA.md)** —— 运行时规范。大表/小表/笔记 三类文件的字段定义。三个 skill 都引用它。
+- **`projects/<某个项目>/workflows/`** —— 看真实工作流长什么样，比看虚构示例更有信息量。
+
+## 核心隐喻：大表 / 小表 / 笔记
+
+| 概念 | 文件 | 角色 |
+|---|---|---|
+| 大表 | `workflows/workflow.yaml` | 流程定义。该做什么。**不变。** |
+| 小表 | `runs/<run_id>/manifest.yaml` | 进度记录。这次做到哪了。**实时维护。** |
+| 笔记 | `workflows/notes/<step_id>.md` | 单步的扩展信息。**按需创建，平时不读。** |
+
+所有其他术语（units、fan-out、stale 传播）都是这三件东西的具体形态或衍生。
 
 ## 三个框架 skill
 
 | Skill | 职责 |
 |---|---|
-| `workflow-compose` | 采访用户 → 生成 workflow YAML |
-| `workflow-run` | 执行 workflow → 维护 manifest |
-| `workflow-revise` | 自然语言修改 → 定位 unit → 沿链重跑 |
+| `workflow-compose` | 和用户对话 → 写大表 |
+| `workflow-run` | 读大表 → 顺序执行 → 维护小表 |
+| `workflow-revise` | 自然语言修改 → 定位 → 标 stale → 触发重跑 |
 
-源文件都在 `project-template/.claude/skills/`——这是**唯一的真相源**。修改框架就改这里，然后用 install.bat 同步到现有项目。
+源文件都在 `project-template/.claude/skills/`——这是**唯一的真相源**。修改框架就改这里，下次创建的新项目自动带上新版本。**旧项目不回头同步**。
 
-## 关键机制（速查）
+## 核心原则速记
 
-- **autonomy**：`auto` / `report` / `ask`——打磨期 ask，稳定后 report
-- **dispatch**：`inline`（默认）/ `subagent`——长任务、大输出派给 sub-agent 隔离主会话
-- **iterates_over: units**：fan-out 起点把 N 个切片写进 manifest.units，之后步骤对每个 unit 跑一次
-- **parallelism**：fan-out step 内 units 之间的并行度，默认 1
-- **issues 反馈**：打磨期间记到 `process-findings.md`，session 末和用户一起决定提 GitHub issue 到框架仓
+- **落地是真相，种子是兜底**：有 `command` 直接跑；没 `command` 或跑不通才回 `description` 重新理解
+- **渐进披露**：`notes` sidecar 文件正常路径不读，异常路径才打开
+- **能写死就写死**：编排越具体越好，少留判断空间
+- **Claude Code 是主语**：能让它自主判断的就别加字段
 
-## 安装与更新
+更多详情见 FRAMEWORK.md。
 
-双击 `install.bat`（或命令行运行），出现菜单：
+## 创建新项目
 
-```
-1. Create new project
-2. Update framework skills in all existing projects
-3. Exit
-```
+在本仓根目录跟 Claude Code 说："复制 `project-template/` 到 `projects/<新项目名>/`"。整个模板（含框架 skill）会被拷贝过去，构成一个独立的、自包含的项目快照。
 
-### 创建新项目（选 1）
+之后 `cd projects/<名字>` 开始干活。
 
-输入项目名，项目被创建在 `projects/<名字>/`，整个 `project-template` 复制过来，包括框架 skill 副本。
+## 旧项目不回头同步
 
-### 更新已有项目（选 2）
+框架演化只惠及**下一个**新项目。已经存在的项目在它创建那一刻的框架快照上独立运行，不被回头改动。
 
-修改了 `project-template/.claude/skills/` 下的框架 skill 后，选 2 一键同步到 `projects/` 下所有现有项目。只覆盖这几项：
+这是有意的设计选择，不是偷懒：
 
-- `WORKFLOW_SCHEMA.md`
-- `workflow-compose/`
-- `workflow-run/`
-- `workflow-revise/`
+- 旧项目已经在旧机制上跑通了。强行同步意味着每次框架变更都触发一轮重构，得不偿失。
+- 如果旧项目业务逻辑真的需要新框架能力，更快的做法是**新建一个项目，参照旧项目的业务结构重新搭一遍**。
+- 重构比修改快，是 FRAMEWORK.md 演化哲学的延伸。
 
-项目私有 skill（`gemini/`、`grok/` 等）不会被覆盖。
+## 第三方 skill
 
-更新后在各项目里重启 Claude Code 让它重新加载 skill。
-
-### 为什么扭进项目里一份副本
-
-让每个项目独立、可移植。拷到别的机器也能跑，不依赖全局 skill。
-
-### 可选：装到 personal 级别
-
-如果某天你不再需要每个项目独立可移植，可以装一份到 `~/.claude/skills/` 跨项目共用：
-
-```bash
-mkdir -p ~/.claude/skills
-cp -r project-template/.claude/skills/* ~/.claude/skills/
-```
-
-但推荐还是走 install.bat 路子。
+`gemini`、`grok`、`runninghub-tts` 这类调用外部模型/服务的 skill 不在本仓管理范围内，由独立的 skill 仓库维护。新项目创建后按需自行拉取。
 
 ## 演化
 

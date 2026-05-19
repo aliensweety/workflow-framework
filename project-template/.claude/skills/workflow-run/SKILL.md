@@ -1,192 +1,205 @@
 ---
 name: workflow-run
-description: 执行一个 workflow YAML，维护 manifest 运行态。当用户说"跑工作流"、"开始生产"、"执行流程"、"run workflow"、"start a production run"、"继续上次的 run"或类似意图，或提及项目里已有的 workflow 名字时触发。按 autonomy 级别决定是否停下来和用户交互：auto 直接跑、report 跑完简报、ask 停下等确认。支持 fan-out（iterates_over units）、并行（parallelism）、subagent 派发（dispatch）和 resume。
+description: 执行一个 workflow 大表，维护小表 manifest 运行态。当用户说"跑工作流"、"开始生产"、"执行流程"、"run workflow"、"start a production run"、"继续上次的 run"或提及项目里已有的工作流时触发。正常路径按 command 跑；只有 command 跑不通或没有 command 时才回 description 决定怎么做。step 失败时打开对应 sidecar 笔记。支持 resume 和局部重跑。
 ---
 
 # workflow-run
 
-读取 workflow YAML，按顺序执行每一步，持续维护 manifest。
+读大表，按顺序执行每一步，持续维护小表。
 
 ## 前置阅读
 
-触发时先读 `../WORKFLOW_SCHEMA.md`，确认字段语义。schema 里"intent 和其他字段的关系"那段尤其重要——**command / method / dispatch / consumes / produces 是示例而非机械指令，如果环境变了，按 intent 重新判断怎么落地**。
+触发时先读 `../WORKFLOW_SCHEMA.md`，确认字段语义和小表结构。
+
+**重点理解三条核心原则**：
+
+- **落地是真相，种子是兜底**：有 `command` 直接跑，不要因为"想确认一下"而把 description 也读一遍判断；只有 command 跑不通或不存在才回 description
+- **渐进披露**：`notes` 字段是 sidecar 路径，正常路径**不要打开它**——读到字段名就够了。只在异常路径下用 Read 工具打开
+- **每跑完一份产出立刻更新小表**：这是 resume 能力的基础
+
+---
 
 ## 启动流程
 
-### 第一步：定位 workflow
+### 第一步：定位大表
 
-直接读项目根 `workflow.yaml`。不存在就提示用户先用 `workflow-compose` 做一份。
-
-读进 workflow YAML 全部内容。
+读 `workflows/workflow.yaml`。不存在就提示用户先用 `workflow-compose` 编排。
 
 ### 第二步：定位 run（resume vs new）
 
 扫项目 `runs/`，看有没有 `status: in_progress` 或 `paused` 的 run。
 
-**有 in-progress 的**：
-- 告诉用户："发现上次的运行 `<run_id>`，停在 `<current_step>`。恢复，还是开新的?"
-- 恢复 → 读 manifest.yaml，跳到第三步
+**有未完成的 run**：
+- 告诉用户："发现上次的运行 `<run_id>`，停在 `<current_step>`。恢复还是开新的?"
+- 恢复 → 读对应 manifest.yaml，跳到第三步
 - 开新的 → 走"新建 run"流程
 
 **新建 run**：
-1. 问用户这次运行的"实例名"（书名/选题/场景名等），用于 run_id
-2. 创建 `runs/<YYYY-MM-DD>_<instance>/` 目录（如有重名加时间后缀）
-3. 初始化 manifest.yaml：`run_id`、`instance`、`created_at`、`status: in_progress`、`current_step`（第一个 step 的 id）、`steps_status`（全部 pending）、`units: []`
-4. 写入 manifest 文件
+1. 问用户这次的"实例名"（书名/选题/场景名等），用于 run_id
+2. 创建 `runs/<YYYY-MM-DD>_<instance>/` 目录
+3. 初始化 manifest.yaml：硬约束字段填好，`steps_status` 全部 pending，`units: []`
+4. 写入磁盘
 
 ### 第三步：按 step 顺序执行
 
-遍历 workflow.steps：
+遍历 `workflow.steps`：
 
 ```
-for step in workflow.steps:
+for step in steps:
   if steps_status[step.id] == done: 跳过
-  if steps_status[step.id] == stale: 重跑（只对 status 为 stale 的 units）
+  if steps_status[step.id] == stale: 重跑
   否则: 执行
 ```
 
-执行 step 的通用流程：
-1. 在 manifest 里标记 `running`，更新 `current_step`
-2. 根据 `dispatch` 决定派发方式（见下一节）
-3. 根据 `method` 分派执行
-4. 成功 → 标记 `done`，更新 manifest；失败 → 标记回 `pending`，告诉用户错误
-5. 按 autonomy 决定是否停下
+每个 step 的通用流程：
+1. 在 manifest 里标 `running`，更新 `current_step`
+2. 决定派发方式（见下）
+3. 执行
+4. 成功 → 标 `done`，更新 manifest；失败 → 标回 `pending`（或保留 `running` 加错误信息），打开 notes 看怎么办
+5. 继续下一步（除非失败或用户介入）
 
-## dispatch 派发
+---
 
-### dispatch: inline（默认）
+## 怎么执行一个 step
 
-在主会话里直接执行 step。command / skill / claude-code 推理都在主会话上下文里完成。
+### 默认路径：有 command 就照跑
 
-### dispatch: subagent
+```yaml
+- id: generate_images
+  description: 对每个 unit 调用 Grok 生图
+  command: "python scripts/grok_image.py --prompt '{unit.prompt}' --out {run.dir}/img_{unit.id}.png"
+```
 
-把这一步派给 sub-agent 跑。具体方式：
+直接对 command 做变量插值，用 Bash 工具执行。**不要为了"理解一下"读 description——那是兜底，不是双保险**。
 
-**对于 method: script**：用 Agent 工具（或 Task 工具）启动一个 sub-agent，告诉它：
-- step 的 intent（让它知道在做什么）
-- 要执行的 command（变量插值后的完整命令）
-- 期望的产出位置（produces）
-- 完成后回报：成功与否、产出文件路径、关键信息摘要
+成功（exit code 0）→ 更新 manifest。
+失败 → 进入异常路径（见下）。
 
-主会话不接收 stdout/stderr 的全部内容，只拿摘要。
+### 没有 command：按 description 自主完成
 
-**对于 method: claude-code 或 skill**：把 step.intent 和 consumes 文件作为任务交给 sub-agent，让它在自己的上下文里完成，回报产出。
+```yaml
+- id: write_script
+  description: |
+    根据本期选题写一份完整文案，要点：
+    - 结构按"问题→分析→结论"
+    - 总长度 800-1200 字
+    - 风格平实理性
+  produces: "{run.dir}/script.md"
+```
 
-**长时间任务的策略**：
-- 如果 step 涉及轮询、等待外部任务（deep research、TTS 异步任务），sub-agent 启动后可以让它继续在后台跑。Claude Code v2 支持后台 sub-agent，主会话可以继续往下处理 inline 步骤。但当前框架默认 step 之间串行——所以 subagent 跑完才进下一步。
-- 即便如此，dispatch: subagent 仍然有用——避免轮询过程中的大量 stdout 污染主会话上下文。
+没 command 说明这是思考型步骤。按 description 自主决定怎么做——调 skill、用基础工具推理、生成文件，都可以。produces 给出输出位置。
 
-**降级**：如果环境不支持 sub-agent（旧版本 Claude Code、特殊配置），降级为 inline 执行并告诉用户。
+完成后产出文件 → 更新 manifest。
 
-## method 分派
+### produces 决定 fan-out 形态
 
-### method: claude-code
+- `produces: "{run.dir}/script.md"` → 单份产出，正常 step
+- `produces: "manifest.units"` → 这一步把内容切成多份写入 manifest.units（fan-out 起点）
+- `produces: "unit.image"` → 这一步对每个 unit 跑一次，写入 unit.image 字段
 
-Claude Code 自己用基础工具（Read、Edit、Bash、推理）完成。读 step.intent 理解要做什么，读 consumes 指向的内容，产出 produces 指向的文件或字段。
+**`unit.<field>` 形态的产出 = 对当前 manifest.units 循环执行**。每个 unit 跑完立刻 persist 到磁盘（防止中断丢失）。
 
-典型衔接型场景：从 JSON 抽字段、切分文本为 units、装配 manifest。
+具体执行时 command 里用 `{unit.<field>}` 占位符引用当前 unit 字段，循环替换。
 
-**写入 manifest.units 的 step（fan-out 起点）**：当 step.intent 说"切分 X 写入 manifest.units"时，Claude Code 要：
-1. 读 consumes 文件
-2. 按 intent 描述切分（找到合适 skill/工具/自己推理）
-3. 把每个切片转成一个 unit dict（id 用 `<unit_type>_NNN` 零填充，status: pending，加上 unit_fields 定义的字段）
-4. 写回 manifest.yaml 的 units 数组
+### 长任务 / 大输出 自动派 subagent
 
-### method: skill:<n>
+不需要用户在大表里声明 dispatch。Claude Code 根据 step 性质自己判断：
 
-把任务委派给一个专门的 skill：
-1. 找到 skill（先看项目 `.claude/skills/<n>/`，再看 `~/.claude/skills/<n>/`）
-2. 按描述触发让 Claude Code 识别并加载
-3. 按它的指引完成任务，产出写到 produces 指定位置
+- 长时间运行（轮询、等待外部任务）→ 派 subagent
+- 输出量大但只需要最终结果（research、log 分析）→ 派 subagent
+- 短任务、输出量小、需要主会话感知 → inline
 
-### method: script
+派 subagent 时把 step.description 和 consumes 文件作为任务交过去，让它在自己的上下文里完成，回报产出位置和关键摘要。主会话不接收完整 stdout/stderr。
 
-执行 command 字段里的 shell 命令：
-1. 对 command 做变量插值（`{run.dir}`、`{run.id}`、`{unit.<field>}`、`{unit.id}`）
-2. 用 Bash 工具执行（或派给 sub-agent，看 dispatch）
-3. 检查 returncode：0 成功，非 0 失败
-4. stdout/stderr 根据需要记录到 `{run.dir}/logs/<step_id>.log`
+注意：**step 之间仍然串行**——subagent 跑完才进下一步。subagent 的作用是**隔离上下文**，不是非阻塞调度。
 
-**command 是示例而非机械指令**。如果插值后命令在当前环境明显跑不通（脚本路径变了、参数名改了），按 step.intent 重新判断正确的调法，不要盲跑失败再问。修正后的命令可以反写回 workflow.yaml（提示用户确认）。
+### 并行多 unit 自动判断
 
-## fan-out 和并行
+`unit.<field>` 形态的 step 默认按 unit 顺序循环。如果脚本支持并发调用（看 description / notes 是否提示）且资源允许，Claude Code 自主决定要不要并发跑。
 
-### step 有 `iterates_over: units` 时
+如果脚本不支持并发（有 session 冲突、API 限流等），降级为串行。
 
-**前提**：manifest.units 已经被前面某个 step 填充。如果 units 还是空数组，说明前面的"生成 units 的 step"还没跑或漏了——告诉用户问题。
+---
 
-对每个 status != done 的 unit 循环：
-- command 插值用当前 unit 的字段
-- 每跑完一个 unit，更新 manifest（小粒度持久化，防止中断丢失）
-- 把产出文件路径回写到对应 unit 的字段（如 image_path）
+## 异常路径：command 跑不通时
 
-### parallelism
+step 失败时：
 
-- 不写 / 写 1 → 串行，按 unit 顺序一个一个跑
-- 写 >1（如 4）→ 并行，最多同时跑 N 个 units
+### 1. 打开 notes sidecar（如果 step 有 notes 字段）
 
-并行实现可以用 Python 的 concurrent.futures、xargs -P、node 的 Promise.all 等等——看脚本适合哪种方式。并行时同样要保证每个 unit 跑完及时持久化到 manifest，避免并发写冲突（最简单的做法是先收齐再统一写）。
+用 Read 工具打开 `workflows/notes/<step_id>.md`。读完寻找处理方法：
 
-如果脚本本身不支持并发调用（有 session 冲突、API 限流等），即使写了 parallelism 也要降级为串行并告诉用户原因。
+- 是否有"出错时"段落给了应对策略
+- 是否有"经验与坑"提到过类似失败
+- 是否有"历史决策"说明 command 为什么长这样
 
-**parallelism 和 dispatch 可以同时用**：每个 unit 的执行可以派给不同的 sub-agent 并行跑，主会话只汇总结果。
+### 2. 回到 description 重新理解
 
-## autonomy 行为
+按 description 重新判断这一步应该怎么做。可能需要：
+- 修正 command 里的路径/参数/工具名
+- 改用不同的 skill
+- 自己用基础工具拼一个执行方式
 
-每个 step 执行后按 `autonomy` 决定：
+### 3. 修正后的 command 反写
 
-### auto
-- 成功：悄悄继续，不要打扰
-- 失败：停下，告诉用户错误
+如果发现 command 本身写错了或环境变了（路径改了、参数名变了），修复后**告诉用户修正过、并询问要不要把修正反写回 workflow.yaml**。
 
-### report
-- 成功：一句话简报（"完成 `<step_id>`：产出了 N 个 xxx"），继续
-- 失败：同 auto
+### 4. 仍然解决不了 → 停下问用户
 
-### ask
-- 执行完**不管成败**都停下
-- 展示产出关键内容（思考型步骤展示文案/prompt 等供用户审）
-- 问："OK 吗?要改哪里?还是继续?"
-- 用户 OK → 标记 done，继续
-- 用户要改 → 协助修改，改完再问一次
-- 用户说"后面也用这个 autonomy 跑完" → OK，本次会话降级 ask→report
+把错误信息、已经尝试的修复、notes 里的提示一起呈现，等用户决定。
 
-**fan-out 场景下的 ask**：第一个 unit 跑完就停下问。用户确认方向后，剩余 units 默认提议降级 report 批量跑。不会每个 unit 都打断。
+---
 
-## 遇到问题：按目录分诊
+## 持续维护小表
 
-| 故障来源 | 动作 |
-|---|---|
-| `workflow.yaml`、`scripts/`、`runs/` 下任何东西 | 直接改，跑下去 |
-| 外部 skill / 工具 | 每个 skill 文档自带反馈仓库地址，不需要这里管 |
-| 框架部件或按指引跑下来感觉不顺 | 写一条到 `process-findings.md`（临时笔记），session 末和用户讨论要不要提 GitHub issue |
+**每跑完一份产出立刻 persist**——这是 resume 能力的基础：
 
-process-findings.md 是临时笔记——随手记，session 末和用户一起过一遍，决定哪些要提成 GitHub issue。
+- 单份产出 step 完成 → 更新 steps_status[step.id] = done，更新 current_step，写盘
+- 多份产出 step 的**每一个 unit** 完成 → 更新该 unit 的 status 和字段、写盘；step 整体的 status 等所有 unit 都完成才标 done
 
-### 提交 issue
+并行执行多 unit 时尤其注意：先收齐结果再统一写一次盘，避免并发写冲突。
 
-用户确认要提交某条 finding 后：
-
-1. 从项目 CLAUDE.md 读 GitHub issues 仓库地址
-2. issue 标题：`[<项目名>] <一句话现象>`
-3. issue body：项目名、现象、发生场景（run / step）、一个初步判断（如果有的话）
-4. 用 `gh issue create -R <仓库>` 提交
-5. 把 issue URL 写回 process-findings.md 对应条目，状态改为 `submitted`
+---
 
 ## 完成
 
 所有 steps 都 done：
 - manifest.status = done
-- 总结：run_id、耗时、产出路径、units 数量
-- 建议：发现问题用 `workflow-revise` 改
+- 给用户一个总结：run_id、耗时、产出路径、units 数量
+- 提示：发现问题用 workflow-revise 改
+
+---
+
+## 反馈通路（process-findings.md）
+
+执行过程中如果发现**框架本身/流程结构**层面的不顺，记一条到 `process-findings.md`。session 末和用户一起过一遍，决定哪些提 GitHub issue。
+
+**怎么分诊**：
+
+| 故障来源 | 动作 |
+|---|---|
+| `workflow.yaml` / `scripts/` / `runs/` 下的内容 | 直接改，跑下去——这些是项目自己的事 |
+| 外部 skill / 工具的 bug | 该 skill 文档自带反馈仓库地址，提到那里 |
+| 框架部件本身（三个 SKILL、SCHEMA） / 跑下来感觉某机制不顺 | 写一条到 `process-findings.md`，session 末讨论 |
+
+### 提交 GitHub issue
+
+用户确认要提交某条 finding 后：
+
+1. issue 标题：`[<项目名>] <一句话现象>`
+2. issue body：项目名、现象、发生场景（run / step）、初步判断（如果有）
+3. `gh issue create -R aliensweety/workflow-framework`
+4. 把 issue URL 写回 process-findings.md 对应条目，状态改为 `submitted`
+
+---
 
 ## 需要警惕的模式
 
-- **不要在 workflow YAML 里偷偷加字段**。发现字段不够用，记到 process-findings.md。
-- **不要批量全自动跑过 ask 节点**。ask 就是要停。
-- **不要把 manifest 当一次性写入**。每个 step / 每个 unit 跑完都要持久化。
-- **不要把 logs 和产出物混一起**。日志进 `{run.dir}/logs/`，正式产出在 `{run.dir}/` 其他位置。
-- **不要"修好就偷偷继续"**。ask 节点改完要再确认一次。
-- **不要机械执行失败的 command**。command 是示例，环境变了要按 intent 重判断。
-- **不要硬改外部 skill 源代码**——每个 skill 自带反馈机制。
-- **不要把自己 workflow.yaml/ scripts/ runs/ 的问题推到 process-findings**。
+- **不要在正常路径读 notes**。读到字段名就够了。读 notes 是异常路径的事。
+- **不要因为"想确认"而读 description**。有 command 直接跑。description 是兜底。
+- **不要把 manifest 当一次性写入**。每个 step、每个 unit 跑完都要 persist。
+- **不要在大表里偷偷加字段**。schema 之外的字段不写。发现需要某种新能力，记到 process-findings.md。
+- **不要"修好就偷偷继续"**。发现 command 错了改完之后，告诉用户做了什么决定。
+- **不要机械执行失败的 command**。command 是落地真相，但环境变了要按 description+notes 重新判断。
+- **不要把自己 workflow.yaml / scripts 的问题推到 process-findings.md**——那是框架/通用层的反馈通路，项目自己的事直接在项目里改。
+- **不要硬改外部 skill 源代码**。每个 skill 自带反馈机制。

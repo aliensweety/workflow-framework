@@ -1,0 +1,14 @@
+# 大表骨架——用 workflow-compose 把它编排出来。
+#
+# 触发 compose 的方式：跟 Claude Code 说"做一个新工作流"、"设计一个流程"、
+# 或者具体描述要把什么工作固化下来。
+#
+# compose 会自由对话直到能写出完整大表，然后覆盖本文件。
+#
+# 完整字段定义见 .claude/skills/WORKFLOW_SCHEMA.md
+
+name: ""
+description: |
+  （编排时填写）
+
+steps: []
