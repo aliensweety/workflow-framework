@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>fable-short-video — workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-theme="amber" data-anim="on">
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-text">FLOW</span>
+      <span class="brand-sub">workflow visualizer</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="legend">
+      <span class="lg"><span class="lg-sw lg-inline"></span>inline</span>
+      <span class="lg"><span class="lg-sw lg-subagent"></span>subagent</span>
+      <span class="lg"><span class="lg-sw lg-decision"></span>decision</span>
+    </div>
+    <button class="iconbtn" id="settings-btn" aria-label="Settings">
+      <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.25">
+        <circle cx="8" cy="8" r="2.2"/>
+        <path d="M8 1.5v1.8M8 12.7v1.8M14.5 8h-1.8M3.3 8H1.5M12.6 3.4l-1.27 1.27M4.67 11.33L3.4 12.6M12.6 12.6l-1.27-1.27M4.67 4.67L3.4 3.4"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Settings popover -->
+<div class="popover" id="settings-pop" hidden>
+  <div class="pop-row">
+    <div class="pop-label">主题色</div>
+    <div class="pop-swatches">
+      <button class="sw sw-amber" data-theme="amber" aria-label="amber"></button>
+      <button class="sw sw-cyan"  data-theme="cyan"  aria-label="cyan"></button>
+      <button class="sw sw-lime"  data-theme="lime"  aria-label="lime"></button>
+      <button class="sw sw-rose"  data-theme="rose"  aria-label="rose"></button>
+    </div>
+  </div>
+  <div class="pop-row">
+    <div class="pop-label">连线动画</div>
+    <div class="seg" id="seg-anim">
+      <button data-anim="on">流动</button>
+      <button data-anim="off">静态</button>
+    </div>
+  </div>
+  <div class="pop-row">
+    <div class="pop-label">连线形状</div>
+    <div class="seg" id="seg-curve">
+      <button data-curve="bezier">曲线</button>
+      <button data-curve="ortho">折线</button>
+    </div>
+  </div>
+  <div class="pop-row">
+    <div class="pop-label">背景</div>
+    <div class="seg" id="seg-bg">
+      <button data-bg="dot">点阵</button>
+      <button data-bg="grid">网格</button>
+      <button data-bg="none">无</button>
+    </div>
+  </div>
+</div>
+
+<!-- Header card with flow meta -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-main">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-mark"></span>
+        <span class="eyebrow-text">PRODUCTION WORKFLOW</span>
+      </div>
+      <h1 class="hero-title" id="flow-name"></h1>
+      <p class="hero-desc" id="flow-desc"></p>
+    </div>
+    <aside class="hero-side">
+      <div class="hero-stat">
+        <div class="stat-num" id="stat-nodes"></div>
+        <div class="stat-lbl">nodes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num" id="stat-branches"></div>
+        <div class="stat-lbl">branches</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num" id="stat-parallel"></div>
+        <div class="stat-lbl">parallel</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="vars-wrap" id="vars-wrap"></div>
+</section>
+
+<!-- Flow canvas -->
+<main class="canvas">
+  <div class="canvas-inner" id="canvas-inner">
+    <svg class="edge-layer" id="edge-layer" aria-hidden="true"></svg>
+    <div class="flow-root" id="flow-root"></div>
+  </div>
+</main>
+
+<!-- Detail drawer -->
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-eyebrow">STEP DEFINITION</div>
+    <button class="iconbtn drawer-x" id="drawer-close" aria-label="Close">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 3l10 10M13 3L3 13"/>
+      </svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<script src="app.js"></script>
+</body>
+</html>
